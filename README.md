@@ -12,7 +12,7 @@ This code will run on a raspberry pi, and operate a curing machine. This machine
 
 ## Machine capabilities 
 
-The machine will display a menu on the lcd screen, which can be navigated with the input buttons. This menu will contain the following entries:
+The machine will display a menu on the lcd screen, which can be navigated with the input buttons. This menu will allow the user to start the following operations:
 
 - Configuring the speed of the belt 
 - Manually turning the belt
@@ -25,3 +25,14 @@ The machine will display a menu on the lcd screen, which can be navigated with t
 - Configuring any additional parameters 
 
 
+This leavee the following subsystems for this program:
+
+- Driving the stepper motors
+- Driving the camera
+- Handling the input buttons
+- Driving the lcd 
+- Parsing input to a menu
+- Managing parameter saving and editing
+- Managing data saving
+- Managing data exporting
+- Handling sequences of output 
