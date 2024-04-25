@@ -15,9 +15,9 @@ class Belt:
                               enable_pin=4, mode_pins=(21, 22, 27))
 
         time.sleep(1)
-        self.setupMotor(self.Motor1)
+        self.setupMotor(self.motor1)
         time.sleep(2)
-        self.setupMotor(self.Motor2)
+        self.setupMotor(self.motor2)
 
     def setupMotor(self, motor: DRV8825):
         motor.SetMicroStep('softward', 'fullstep')
