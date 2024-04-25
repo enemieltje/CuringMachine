@@ -20,7 +20,7 @@ class Belt:
         self.setupMotor(self.motor2)
 
     def setupMotor(self, motor: DRV8825):
-        motor.SetMicroStep('softward', 'fullstep')
+        motor.SetMicroStep('hardward', '1/4step')
         motor.TurnStep(Dir='forward', steps=200, stepdelay=0.005)
         time.sleep(0.5)
         motor.TurnStep(Dir='backward', steps=400, stepdelay=0.005)
