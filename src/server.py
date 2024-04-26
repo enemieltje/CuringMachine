@@ -112,14 +112,14 @@ class StreamingHandler(server.BaseHTTPRequestHandler):
             print("start cam")
             for camera in Server.cameras:
                 camera.startStream()
-            self.send_response(301)
+            self.send_response(302)
             self.send_header('Location', '/index.html')
             self.end_headers()
         elif self.path == '/button/stopcam':
             print("stop cam")
             for camera in Server.cameras:
                 camera.stopStream()
-            self.send_response(301)
+            self.send_response(302)
             self.send_header('Location', '/index.html')
             self.end_headers()
         else:
