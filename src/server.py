@@ -3,7 +3,7 @@ import time
 
 
 class Server():
-    hostName = "127.0.0.1"
+    hostName = "0.0.0.0"
     port: int
     webServer: HTTPServer
 
