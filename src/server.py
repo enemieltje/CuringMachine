@@ -27,9 +27,10 @@ class Server():
 
     def __init__(self, port=8080):
         self.port = port
+
+    def startHTTPServer(self):
         self.webServer = HTTPServer((self.hostName, self.port), RequestHandler)
         print("Server started http://%s:%s" % (self.hostName, self.port))
-
         try:
             self.webServer.serve_forever()
         except KeyboardInterrupt:
@@ -37,6 +38,16 @@ class Server():
 
         self.webServer.server_close()
         print("Server stopped.")
+
+    def startStreamServer():
+        address = ('', 8000)
+        streamServer = StreamingServer(address, StreamingHandler)
+        try:
+            # Set up and start the streaming server
+            streamServer.serve_forever()
+        finally:
+            # Stop recording when the script is interrupted
+            print("Stream stopped.")
 
 
 class RequestHandler(BaseHTTPRequestHandler):
@@ -104,13 +115,3 @@ class StreamingHandler(server.BaseHTTPRequestHandler):
 class StreamingServer(socketserver.ThreadingMixIn, server.HTTPServer):
     allow_reuse_address = True
     daemon_threads = True
-
-
-try:
-    # Set up and start the streaming server
-    address = ('', 8000)
-    streamserver = StreamingServer(address, StreamingHandler)
-    streamserver.serve_forever()
-finally:
-    # Stop recording when the script is interrupted
-    picam2.stop_recording()

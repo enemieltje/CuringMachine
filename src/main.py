@@ -16,6 +16,8 @@ class Client:
         self.camera = Camera()
         self.camera.startStream()
         self.server = Server()
+        self.server.startStreamServer()
+        self.camera.stopStream()
         self.belt = Belt()
 
 
