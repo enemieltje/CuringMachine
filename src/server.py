@@ -40,17 +40,23 @@ class StreamingServer(socketserver.ThreadingMixIn, server.HTTPServer):
         self.process = multiprocessing.Process(target=self.run)
         self.process.start()
 
+    def stop(self):
+        self.process.terminate()
+
 
 class Server():
     port = 8080
     cameras = list()
-    webServer: StreamingServer
+    streamServer: StreamingServer
 
-    def startStreamServer():
+    def start():
         address = ('', 8000)
         # self.cameras[0].startStream()
-        streamServer = StreamingServer(address, StreamingHandler)
-        streamServer.start()
+        Server.streamServer = StreamingServer(address, StreamingHandler)
+        Server.streamServer.start()
+
+    def stop():
+        Server.streamServer.stop()
 
     def addCamera(camera: Camera):
         Server.cameras.append(camera)
