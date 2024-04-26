@@ -98,8 +98,14 @@ class StreamingHandler(server.BaseHTTPRequestHandler):
                     self.client_address, str(e))
         elif self.path == '/button/startcam':
             Server.cameras[0].startStream()
+            self.send_response(301)
+            self.send_header('Location', '/index.html')
+            self.end_headers()
         elif self.path == '/button/stopcam':
             Server.cameras[0].stopStream()
+            self.send_response(301)
+            self.send_header('Location', '/index.html')
+            self.end_headers()
         else:
             # Handle 404 Not Found
             self.send_error(404)
