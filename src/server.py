@@ -1,5 +1,23 @@
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import time
+import io
+import logging
+import socketserver
+from http import server
+from camera import output
+
+
+PAGE = """\
+<html>
+<head>
+<title>RaspberryTips Pi Cam Stream</title>
+</head>
+<body>
+<h1>Raspberry Tips Pi Camera Live Stream Demo</h1>
+<img src="stream.mjpg" width="640" height="480" />
+</body>
+</html>
+"""
 
 
 class Server():
@@ -27,9 +45,72 @@ class RequestHandler(BaseHTTPRequestHandler):
         self.send_header("Content-type", "text/html")
         self.end_headers()
         self.wfile.write(
-            bytes("<html><head><title>https://pythonbasics.org</title></head>", "utf-8"))
+            bytes("<html><head><title>Curing Machine</title></head>", "utf-8"))
         self.wfile.write(bytes("<p>Request: %s</p>" % self.path, "utf-8"))
         self.wfile.write(bytes("<body>", "utf-8"))
         self.wfile.write(
             bytes("<p>This is an example web server.</p>", "utf-8"))
         self.wfile.write(bytes("</body></html>", "utf-8"))
+
+
+# Class to handle HTTP requests
+class StreamingHandler(server.BaseHTTPRequestHandler):
+    def do_GET(self):
+        if self.path == '/':
+            # Redirect root path to index.html
+            self.send_response(301)
+            self.send_header('Location', '/index.html')
+            self.end_headers()
+        elif self.path == '/index.html':
+            # Serve the HTML page
+            content = PAGE.encode('utf-8')
+            self.send_response(200)
+            self.send_header('Content-Type', 'text/html')
+            self.send_header('Content-Length', len(content))
+            self.end_headers()
+            self.wfile.write(content)
+        elif self.path == '/stream.mjpg':
+            # Set up MJPEG streaming
+            self.send_response(200)
+            self.send_header('Age', 0)
+            self.send_header('Cache-Control', 'no-cache, private')
+            self.send_header('Pragma', 'no-cache')
+            self.send_header(
+                'Content-Type', 'multipart/x-mixed-replace; boundary=FRAME')
+            self.end_headers()
+            try:
+                while True:
+                    with output.condition:
+                        output.condition.wait()
+                        frame = output.frame
+                    self.wfile.write(b'--FRAME\r\n')
+                    self.send_header('Content-Type', 'image/jpeg')
+                    self.send_header('Content-Length', len(frame))
+                    self.end_headers()
+                    self.wfile.write(frame)
+                    self.wfile.write(b'\r\n')
+            except Exception as e:
+                logging.warning(
+                    'Removed streaming client %s: %s',
+                    self.client_address, str(e))
+        else:
+            # Handle 404 Not Found
+            self.send_error(404)
+            self.end_headers()
+
+# Class to handle streaming server
+
+
+class StreamingServer(socketserver.ThreadingMixIn, server.HTTPServer):
+    allow_reuse_address = True
+    daemon_threads = True
+
+
+try:
+    # Set up and start the streaming server
+    address = ('', 8000)
+    streamserver = StreamingServer(address, StreamingHandler)
+    streamserver.serve_forever()
+finally:
+    # Stop recording when the script is interrupted
+    picam2.stop_recording()

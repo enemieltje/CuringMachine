@@ -1,16 +1,20 @@
 #!../.venv/bin/python
 from belt import Belt
 from server import Server
+from camera import Camera
 # The client class will start the program and contain all its components
 
 
 class Client:
     belt: Belt
     server: Server
+    camera: Camera
 
     # init is called when an instance of this class is created
     def __init__(self):
         print("start")
+        self.camera = Camera()
+        self.camera.startStream()
         self.server = Server()
         self.belt = Belt()
 
