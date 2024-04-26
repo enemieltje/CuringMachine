@@ -1,4 +1,5 @@
 from http.server import BaseHTTPRequestHandler, HTTPServer
+from socketserver import _AfInetAddress
 import time
 import io
 import logging
@@ -23,12 +24,13 @@ PAGE = """\
 """
 
 
-class StreamingServer(socketserver.ThreadingMixIn, server.HTTPServer, multiprocessing.Process):
+class StreamingServer(socketserver.ThreadingMixIn, server.HTTPServer):
     allow_reuse_address = True
     daemon_threads = True
+    process: multiprocessing.Process
 
-    def __init__(self):
-        super(multiprocessing.Process, self).__init__()
+    def __init__(self, address, streamingHandler):
+        super().__init__(address, streamingHandler)
 
     def run(self):
         try:
@@ -37,6 +39,10 @@ class StreamingServer(socketserver.ThreadingMixIn, server.HTTPServer, multiproce
         finally:
             # Stop recording when the script is interrupted
             print("Stream stopped.")
+
+    def start(self):
+        self.process = multiprocessing.Process(target=self.run, args=(self))
+        self.process.start()
 
 
 class Server():
