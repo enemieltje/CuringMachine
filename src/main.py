@@ -11,8 +11,8 @@ class Client:
     # init is called when an instance of this class is created
     def __init__(self):
         print("start")
-        self.belt = Belt()
         self.server = Server()
+        self.belt = Belt()
 
 
 # Create an instance of the Client class, and save it in a variable called client
