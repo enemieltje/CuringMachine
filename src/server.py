@@ -128,7 +128,8 @@ class StreamingHandler(server.BaseHTTPRequestHandler):
             self.end_headers()
         elif self.path == '/button/showcase':
             print("showcase")
-            Belt.showcase()
+            process = multiprocessing.Process(target=Belt.showcase)
+            process.start()
             self.send_response(302)
             self.send_header('Location', '/index.html')
             self.end_headers()
