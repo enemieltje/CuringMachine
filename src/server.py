@@ -1,6 +1,4 @@
-from _socket import _RetAddress
 from http.server import BaseHTTPRequestHandler, HTTPServer
-from socketserver import BaseServer
 import time
 
 
