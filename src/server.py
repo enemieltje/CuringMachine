@@ -19,6 +19,8 @@ PAGE = """\
 <a href="button/stopcam">Stop Preview</a>
 <br>
 <a href="button/showcase">Showcase Motors</a>
+<br>
+<a href="button/picture">Take Picture</a>
 </body>
 </html>
 """
@@ -80,6 +82,7 @@ class StreamingHandler(server.BaseHTTPRequestHandler):
             self.send_response(301)
             self.send_header('Location', '/index.html')
             self.end_headers()
+
         elif self.path == '/index.html':
             # Serve the HTML page
             content = PAGE.encode('utf-8')
@@ -88,6 +91,7 @@ class StreamingHandler(server.BaseHTTPRequestHandler):
             self.send_header('Content-Length', len(content))
             self.end_headers()
             self.wfile.write(content)
+
         elif self.path == '/stream.mjpg':
             # Set up MJPEG streaming
             self.send_response(200)
@@ -112,6 +116,7 @@ class StreamingHandler(server.BaseHTTPRequestHandler):
                 logging.warning(
                     'Removed streaming client %s: %s',
                     self.client_address, str(e))
+
         elif self.path == '/button/startcam':
             print("start cam")
             for camera in Server.cameras:
@@ -119,6 +124,7 @@ class StreamingHandler(server.BaseHTTPRequestHandler):
             self.send_response(302)
             self.send_header('Location', '/index.html')
             self.end_headers()
+
         elif self.path == '/button/stopcam':
             print("stop cam")
             for camera in Server.cameras:
@@ -126,6 +132,17 @@ class StreamingHandler(server.BaseHTTPRequestHandler):
             self.send_response(302)
             self.send_header('Location', '/index.html')
             self.end_headers()
+
+        elif self.path == '/button/picture':
+            print("picture")
+            imageStream = Server.cameras[0].picture()
+
+            content = PAGE.encode('utf-8')
+            self.send_response(200)
+            self.send_header('Content-Type', 'image/jpeg')
+            self.end_headers()
+            self.wfile.write(imageStream)
+
         elif self.path == '/button/showcase':
             print("showcase")
             process = multiprocessing.Process(target=Belt.showcase)
@@ -133,6 +150,7 @@ class StreamingHandler(server.BaseHTTPRequestHandler):
             self.send_response(302)
             self.send_header('Location', '/index.html')
             self.end_headers()
+
         else:
             # Handle 404 Not Found
             self.send_error(404)
