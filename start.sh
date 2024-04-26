@@ -1,4 +1,4 @@
-python -m venv ./.venv
+python -m --system-site-packages venv ./.venv
 
 ./.venv/bin/pip install numpy --upgrade
 ./.venv/bin/pip install lgpio pigpio gpio
