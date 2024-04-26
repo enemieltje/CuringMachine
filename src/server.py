@@ -42,6 +42,7 @@ class StreamingServer(socketserver.ThreadingMixIn, server.HTTPServer):
 
     def stop(self):
         self.process.terminate()
+        self.process.kill()
 
 
 class Server():
@@ -50,13 +51,14 @@ class Server():
     streamServer: StreamingServer
 
     def start():
-        address = ('', 8000)
+        address = ('', Server.port)
         # self.cameras[0].startStream()
         Server.streamServer = StreamingServer(address, StreamingHandler)
         Server.streamServer.start()
 
     def stop():
         Server.streamServer.stop()
+        Server.streamServer.server_close()
         for camera in server.Cameras:
             camera.stopStream()
 
@@ -105,11 +107,13 @@ class StreamingHandler(server.BaseHTTPRequestHandler):
                     'Removed streaming client %s: %s',
                     self.client_address, str(e))
         elif self.path == '/button/startcam':
+            print("start cam")
             Server.cameras[0].startStream()
             self.send_response(301)
             self.send_header('Location', '/index.html')
             self.end_headers()
         elif self.path == '/button/stopcam':
+            print("stop cam")
             Server.cameras[0].stopStream()
             self.send_response(301)
             self.send_header('Location', '/index.html')
