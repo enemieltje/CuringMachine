@@ -107,23 +107,19 @@ class StreamingHandler(server.BaseHTTPRequestHandler):
                     'Removed streaming client %s: %s',
                     self.client_address, str(e))
         elif self.path == '/button/startcam':
-            content = PAGE.encode('utf-8')
-            self.send_response(200)
-            self.send_header('Content-Type', 'text/html')
-            self.send_header('Content-Length', len(content))
-            self.end_headers()
-            self.wfile.write(content)
             print("start cam")
-            Server.cameras[0].startStream()
+            for camera in server.Cameras:
+                camera.startStream()
+            self.send_response(301)
+            self.send_header('Location', '/index.html')
+            self.end_headers()
         elif self.path == '/button/stopcam':
             print("stop cam")
-            Server.cameras[0].stopStream()
-            content = PAGE.encode('utf-8')
-            self.send_response(200)
-            self.send_header('Content-Type', 'text/html')
-            self.send_header('Content-Length', len(content))
+            for camera in server.Cameras:
+                camera.stopStream()
+            self.send_response(301)
+            self.send_header('Location', '/index.html')
             self.end_headers()
-            self.wfile.write(content)
         else:
             # Handle 404 Not Found
             self.send_error(404)

@@ -19,9 +19,11 @@ class Camera:
             main={"size": (640, 480)}))
 
     def startStream(self):
+        print("start stream")
         self.picam2.start_recording(JpegEncoder(), FileOutput(output))
 
     def stopStream(self):
+        print("stop stream")
         self.picam2.stop_recording()
 
 
