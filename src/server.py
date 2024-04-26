@@ -39,7 +39,7 @@ class Server():
         self.webServer.server_close()
         print("Server stopped.")
 
-    def startStreamServer():
+    def startStreamServer(self):
         address = ('', 8000)
         streamServer = StreamingServer(address, StreamingHandler)
         try:
