@@ -3,6 +3,7 @@ import socketserver
 import multiprocessing
 from http import server
 from camera import output, Camera
+from belt import Belt
 
 
 PAGE = """\
@@ -13,8 +14,11 @@ PAGE = """\
 <body>
 <h1>Pi Camera Live Stream Demo</h1>
 <img src="stream.mjpg" width="640" height="480" />
+<br>
 <a href="button/startcam">Start Preview</a>
 <a href="button/stopcam">Stop Preview</a>
+<br>
+<a href="button/showcase">Showcase Motors</a>
 </body>
 </html>
 """
@@ -37,9 +41,9 @@ class StreamingServer(socketserver.ThreadingMixIn, server.HTTPServer):
             print("Stream stopped.")
 
     def start(self):
-        # self.run()
-        self.process = multiprocessing.Process(target=self.run)
-        self.process.start()
+        self.run()
+        # self.process = multiprocessing.Process(target=self.run)
+        # self.process.start()
 
     def stop(self):
         self.shutdown()
@@ -119,6 +123,12 @@ class StreamingHandler(server.BaseHTTPRequestHandler):
             print("stop cam")
             for camera in Server.cameras:
                 camera.stopStream()
+            self.send_response(302)
+            self.send_header('Location', '/index.html')
+            self.end_headers()
+        elif self.path == '/button/showcase':
+            print("showcase")
+            Belt.showcase()
             self.send_response(302)
             self.send_header('Location', '/index.html')
             self.end_headers()
