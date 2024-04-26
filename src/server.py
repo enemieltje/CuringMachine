@@ -57,6 +57,8 @@ class Server():
 
     def stop():
         Server.streamServer.stop()
+        for camera in server.Cameras:
+            camera.stopStream()
 
     def addCamera(camera: Camera):
         Server.cameras.append(camera)
