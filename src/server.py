@@ -37,7 +37,7 @@ class StreamingServer(socketserver.ThreadingMixIn, server.HTTPServer):
             print("Stream stopped.")
 
     def start(self):
-        self.process = multiprocessing.Process(target=self.run, args=(self))
+        self.process = multiprocessing.Process(target=self.run, args=((self)))
         self.process.start()
 
 
