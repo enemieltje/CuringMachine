@@ -98,7 +98,7 @@ class StreamingHandler(server.SimpleHTTPRequestHandler):
                         frame = output.frame
 
                 else:
-                    frame = bytes(0)
+                    frame = bytes(20000)
 
                 logger.debug(len(frame))
                 self.wfile.write(b'--FRAME\r\n')
