@@ -20,4 +20,7 @@ if __name__ == "__main__":
     print("start")
     camera = Camera()
     Server.addCamera(camera)
-    Server.start()
+    try:
+        Server.start()
+    finally:
+        sigterm_handler()
