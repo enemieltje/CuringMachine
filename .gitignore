@@ -155,8 +155,9 @@ cython_debug/
 # VsCode
 .vscode
 
-# Logs
+# Local Folders
 logs
+pictures
 
 # PyCharm
 #  JetBrains specific template is maintained in a separate JetBrains.gitignore that can
