@@ -23,4 +23,4 @@ if __name__ == "__main__":
     try:
         Server.start()
     finally:
-        sigterm_handler()
+        sigterm_handler(signal.SIGTERM, 0)

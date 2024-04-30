@@ -10,6 +10,7 @@ class Camera:
     picam2: Picamera2
     videoConfig: dict
     captureConfig: dict
+    isRecording: bool
 
     def __init__(self) -> None:
 
@@ -26,15 +27,26 @@ class Camera:
 
     def startStream(self):
         print("start stream")
+        self.isRecording = True
         self.picam2.start_recording(JpegEncoder(), FileOutput(output))
 
     def stopStream(self):
         print("stop stream")
+        self.isRecording = False
         self.picam2.stop_recording()
 
     def picture(self, path=(str(time.asctime()) + ".png")):
+        wasRecording = self.isRecording
+        print("taking picture:", path)
+
+        if wasRecording:
+            self.stopStream()
+
         self.picam2.switch_mode_and_capture_file(
             self.captureConfig, path, "main", delay=10)
+
+        if wasRecording:
+            self.startStream()
 
         with open(path, 'rb') as file_handle:
             return file_handle.read()
