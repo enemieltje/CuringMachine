@@ -139,7 +139,7 @@ class StreamingHandler(server.BaseHTTPRequestHandler):
 
             content = PAGE.encode('utf-8')
             self.send_response(200)
-            self.send_header('Content-Type', 'image/jpeg')
+            self.send_header('Content-Type', 'image/png')
             self.end_headers()
             self.wfile.write(imageStream)
 

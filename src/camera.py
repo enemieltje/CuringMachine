@@ -32,7 +32,7 @@ class Camera:
         print("stop stream")
         self.picam2.stop_recording()
 
-    def picture(self, path=(str(time.asctime()) + ".jpeg")):
+    def picture(self, path=(str(time.asctime()) + ".png")):
         self.picam2.switch_mode_and_capture_file(
             self.captureConfig, path, "main", delay=10)
 
