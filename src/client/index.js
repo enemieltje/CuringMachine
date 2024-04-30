@@ -25,6 +25,7 @@ function toggleButton() {
         div.appendChild(img)
         button.innerHTML = 'Stop Preview'
     }
+    previewActive = !previewActive
 }
 
 function showcaseButton() {
@@ -43,5 +44,5 @@ function get(url){
 
 function redirect(url){
     console.debug("redirecting to:", window.location.host + url)
-    window.location.href = window.location.host + url
+    window.location.href = 'http://' + window.location.host + url
 }
