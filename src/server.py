@@ -1,4 +1,5 @@
 import logging
+import os
 import socketserver
 import multiprocessing
 from http import server
@@ -74,6 +75,13 @@ class StreamingHandler(server.BaseHTTPRequestHandler):
             self.send_header('Location', '/index.html')
             self.end_headers()
 
+        elif self.path == '/favicon.ico':
+            self.send_response(200)
+            self.send_header('Content-Type', 'image/x-icon')
+            self.send_header('Content-Length', 0)
+            self.end_headers()
+            return
+
         elif self.path == '/index.html':
             self.homePage()
 
@@ -94,8 +102,8 @@ class StreamingHandler(server.BaseHTTPRequestHandler):
 
         else:
             # Handle 404 Not Found
-            self.send_error(404)
-            self.end_headers()
+            logger.warn("Request for unknown path:", self.path)
+            self.sendPageNotFound()
 
     def stream(self):
         # Set up MJPEG streaming
@@ -126,16 +134,20 @@ class StreamingHandler(server.BaseHTTPRequestHandler):
     def homePage(self):
         # Serve the HTML page
         content = PAGE.encode('utf-8')
-        self.send_response(200)
-        self.send_header('Content-Type', 'text/html')
-        self.send_header('Content-Length', len(content))
-        self.end_headers()
-        self.wfile.write(content)
+        self.sendStream('text/html', content)
+        # self.send_response(200)
+        # self.send_header('Content-Type', 'text/html')
+        # self.send_header('Content-Length', len(content))
+        # self.end_headers()
+        # self.wfile.write(content)
 
     def redirectHome(self):
         self.send_response(302)
         self.send_header('Location', '/index.html')
         self.end_headers()
+
+    def favicon(self):
+        self.sendFile('image/x-icon', 'client/favicon.ico')
 
     def showcase(self):
         logger.debug("showcase")
@@ -158,8 +170,28 @@ class StreamingHandler(server.BaseHTTPRequestHandler):
     def picture(self):
         logger.debug("picture")
         imageStream = Server.cameras[0].picture()
+        self.sendStream('image/png', imageStream)
+        # self.send_response(200)
+        # self.send_header('Content-Type', 'image/png')
+        # self.end_headers()
+        # self.wfile.write(imageStream)
 
-        self.send_response(200)
-        self.send_header('Content-Type', 'image/png')
+    def sendPageNotFound(self):
+        self.send_error(404)
         self.end_headers()
-        self.wfile.write(imageStream)
+
+    def sendStream(self, contentType, content):
+        self.send_response(200)
+        self.send_header('Content-Type', contentType)
+        self.send_header('Content-Length', len(content))
+        self.end_headers()
+        self.wfile.write(content)
+
+    def sendFile(self, contentType, filePath):
+
+        if not os.path.isfile(filePath):
+            logger.warn('File does not exist:', filePath)
+            self.redirectHome()
+            return
+        f = open(filePath, encoding='utf-8')
+        self.sendStream(contentType, f.read())
