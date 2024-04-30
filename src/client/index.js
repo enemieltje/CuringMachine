@@ -63,5 +63,6 @@ function redirect(url){
     console.debug("redirecting to:", newPage)
 
     // change the url of the browser to the new page
-    window.location.href = newPage
+    open(newPage)
+    // window.location.href = newPage
 }
