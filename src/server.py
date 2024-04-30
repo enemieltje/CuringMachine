@@ -16,7 +16,7 @@ PAGE = """\
 </head>
 <body>
 <h1>Pi Camera Live Stream Demo</h1>
-<img src="stream.mjpg" width="640" height="480" />
+<img src="stream.mjpg" width="640" height="480" alt="Camera Offline"/>
 <br>
 <a href="button/startcam">Start Preview</a>
 <a href="button/stopcam">Stop Preview</a>
@@ -30,6 +30,9 @@ PAGE = """\
 
 
 class StreamingServer(socketserver.ThreadingMixIn, server.HTTPServer):
+    port = 8080
+    cameras = list()
+    instance: any
     allow_reuse_address = True
     daemon_threads = True
 
@@ -44,27 +47,44 @@ class StreamingServer(socketserver.ThreadingMixIn, server.HTTPServer):
             # Stop recording when the script is interrupted
             logger.info("Stream stopped.")
 
-
-class Server():
-    port = 8080
-    cameras = list()
-    streamServer: StreamingServer
-
     def start():
-        address = ('', Server.port)
-        Server.streamServer = StreamingServer(address, StreamingHandler)
-        Server.streamServer.run()
+        address = ('', StreamingServer.port)
+        StreamingServer.instance = StreamingServer(address, StreamingHandler)
+        StreamingServer.instance.run()
 
-        logger.info('Server running at', Server.streamServer.server_address)
+        logger.info('Server running at',
+                    StreamingServer.instance.server_address)
 
     def stop():
-        Server.streamServer.shutdown()
-        Server.streamServer.server_close()
-        for camera in Server.cameras:
+        StreamingServer.instance.shutdown()
+        StreamingServer.instance.server_close()
+        for camera in StreamingServer.cameras:
             camera.stopStream()
 
     def addCamera(camera: Camera):
-        Server.cameras.append(camera)
+        StreamingServer.cameras.append(camera)
+
+
+# class Server():
+#     port = 8080
+#     cameras = list()
+#     streamServer: StreamingServer
+
+#     def start():
+#         address = ('', Server.port)
+#         Server.streamServer = StreamingServer(address, StreamingHandler)
+#         Server.streamServer.run()
+
+#         logger.info('Server running at', Server.streamServer.server_address)
+
+#     def stop():
+#         Server.streamServer.shutdown()
+#         Server.streamServer.server_close()
+#         for camera in Server.cameras:
+#             camera.stopStream()
+
+#     def addCamera(camera: Camera):
+#         Server.cameras.append(camera)
 
 
 # Class to handle HTTP requests
@@ -72,15 +92,13 @@ class StreamingHandler(server.SimpleHTTPRequestHandler):
     def do_GET(self):
         if self.path == '/':
             # Redirect root path to index.html
-            self.send_response(301)
-            self.send_header('Location', '/index.html')
-            self.end_headers()
+            self.redirectHome(permanently=True)
 
         elif self.path == '/favicon.ico':
-            self.favicon()
+            self.sendFile('src/client/favicon.ico')
 
         elif self.path == '/index.html':
-            self.homePage()
+            self.sendFile('src/client/index.html')
 
         elif self.path == '/stream.mjpg':
             self.stream()
@@ -111,7 +129,7 @@ class StreamingHandler(server.SimpleHTTPRequestHandler):
         self.send_header(
             'Content-Type', 'multipart/x-mixed-replace; boundary=FRAME')
         self.end_headers()
-        output = Server.cameras[0].streamingOutput
+        output = StreamingServer.cameras[0].streamingOutput
         try:
             while True:
                 with output.condition:
@@ -128,19 +146,13 @@ class StreamingHandler(server.SimpleHTTPRequestHandler):
                 'Removed streaming client %s: %s',
                 self.client_address, str(e))
 
-    def homePage(self):
-        # Serve the HTML page
-        content = PAGE.encode('utf-8')
-        self.sendStream('text/html', content)
-
-    def redirectHome(self):
-        self.send_response(302)
+    def redirectHome(self, permanently=False):
+        if permanently:
+            self.send_response(301)
+        else:
+            self.send_response(302)
         self.send_header('Location', '/index.html')
         self.end_headers()
-
-    def favicon(self):
-        self.path = 'src/client/favicon.ico'
-        server.SimpleHTTPRequestHandler.do_GET(self)
 
     def showcase(self):
         logger.debug("showcase")
@@ -150,19 +162,19 @@ class StreamingHandler(server.SimpleHTTPRequestHandler):
 
     def startCam(self):
         logger.debug("start cam")
-        for camera in Server.cameras:
+        for camera in StreamingServer.cameras:
             camera.startStream()
         self.redirectHome()
 
     def stopCam(self):
         logger.debug("stop cam")
-        for camera in Server.cameras:
+        for camera in StreamingServer.cameras:
             camera.stopStream()
         self.redirectHome()
 
     def picture(self):
         logger.debug("picture")
-        imageStream = Server.cameras[0].picture()
+        imageStream = StreamingServer.cameras[0].picture()
         self.sendStream('image/png', imageStream)
 
     def sendPageNotFound(self):
@@ -176,11 +188,11 @@ class StreamingHandler(server.SimpleHTTPRequestHandler):
         self.end_headers()
         self.wfile.write(content)
 
-    def sendFile(self, contentType, filePath):
+    def sendFile(self, filePath):
         logger.debug("sending file: " + filePath)
         if not os.path.isfile(filePath):
             logger.warn('File does not exist: ' + filePath)
             self.redirectHome()
             return
-        f = open(filePath, encoding='utf-8')
-        self.sendStream(contentType, f.read())
+        self.path = filePath
+        server.SimpleHTTPRequestHandler.do_GET(self)
