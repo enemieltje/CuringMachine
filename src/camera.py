@@ -65,11 +65,11 @@ class Camera:
 
     def picture(self, path=(str(time.asctime()) + ".png")):
         # Take a picture and save it to a file. If no file was specified, it gets saved with the current time as name
-        wasRecording = self.isStreaming
+        wasStreaming = self.isStreaming
         logger.debug("taking picture: " + path)
 
         # Pause stream if needed
-        if wasRecording:
+        if wasStreaming:
             self.stopStream()
 
         # Take the picture
@@ -77,7 +77,7 @@ class Camera:
             self.captureConfig, path, "main", delay=10)
 
         # Restart stream if needed
-        if wasRecording:
+        if wasStreaming:
             self.startStream()
 
         # Return the picture as a Byte Stream so it can be sent to a webpage directly
