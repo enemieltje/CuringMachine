@@ -8,28 +8,8 @@ from belt import Belt
 
 logger = logging.getLogger(__name__)
 
-PAGE = """\
-<!DOCTYPE html>
-<html>
-<head>
-<title>Curing Machine</title>
-</head>
-<body>
-<h1>Pi Camera Live Stream Demo</h1>
-<img src="stream.mjpg" width="640" height="480" alt="Camera Offline"/>
-<br>
-<a href="button/startcam">Start Preview</a>
-<a href="button/stopcam">Stop Preview</a>
-<br>
-<a href="button/showcase">Showcase Motors</a>
-<br>
-<a href="button/picture">Take Picture</a>
-</body>
-</html>
-"""
 
-
-class StreamingServer(socketserver.ThreadingMixIn, server.HTTPServer):
+class Server(socketserver.ThreadingMixIn, server.HTTPServer):
     port = 8080
     cameras = list()
     instance: any
@@ -48,46 +28,25 @@ class StreamingServer(socketserver.ThreadingMixIn, server.HTTPServer):
             logger.info("Stream stopped.")
 
     def start():
-        address = ('', StreamingServer.port)
-        StreamingServer.instance = StreamingServer(address, StreamingHandler)
-        StreamingServer.instance.run()
+        address = ('', Server.port)
+        Server.instance = Server(address, StreamingHandler)
+        Server.instance.run()
 
         logger.info('Server running at',
-                    StreamingServer.instance.server_address)
+                    Server.instance.server_address)
 
     def stop():
-        StreamingServer.instance.shutdown()
-        StreamingServer.instance.server_close()
-        for camera in StreamingServer.cameras:
+        Server.instance.shutdown()
+        Server.instance.server_close()
+        for camera in Server.cameras:
             camera.stopStream()
 
     def addCamera(camera: Camera):
-        StreamingServer.cameras.append(camera)
-
-
-# class Server():
-#     port = 8080
-#     cameras = list()
-#     streamServer: StreamingServer
-
-#     def start():
-#         address = ('', Server.port)
-#         Server.streamServer = StreamingServer(address, StreamingHandler)
-#         Server.streamServer.run()
-
-#         logger.info('Server running at', Server.streamServer.server_address)
-
-#     def stop():
-#         Server.streamServer.shutdown()
-#         Server.streamServer.server_close()
-#         for camera in Server.cameras:
-#             camera.stopStream()
-
-#     def addCamera(camera: Camera):
-#         Server.cameras.append(camera)
-
+        Server.cameras.append(camera)
 
 # Class to handle HTTP requests
+
+
 class StreamingHandler(server.SimpleHTTPRequestHandler):
     def do_GET(self):
         if self.path == '/':
@@ -129,18 +88,24 @@ class StreamingHandler(server.SimpleHTTPRequestHandler):
         self.send_header(
             'Content-Type', 'multipart/x-mixed-replace; boundary=FRAME')
         self.end_headers()
-        output = StreamingServer.cameras[0].streamingOutput
+        output = Server.cameras[0].streamingOutput
+        placeholder = open('src/client/camera-icon-placeholder.jpg', 'rb')
         try:
             while True:
-                with output.condition:
-                    output.condition.wait()
-                    frame = output.frame
+                if Server.cameras[0].isRecording:
+                    with output.condition:
+                        output.condition.wait()
+                        frame = output.frame
+                else:
+                    frame = placeholder
+
                 self.wfile.write(b'--FRAME\r\n')
                 self.send_header('Content-Type', 'image/jpeg')
                 self.send_header('Content-Length', len(frame))
                 self.end_headers()
                 self.wfile.write(frame)
                 self.wfile.write(b'\r\n')
+
         except Exception as e:
             logging.warning(
                 'Removed streaming client %s: %s',
@@ -162,19 +127,19 @@ class StreamingHandler(server.SimpleHTTPRequestHandler):
 
     def startCam(self):
         logger.debug("start cam")
-        for camera in StreamingServer.cameras:
+        for camera in Server.cameras:
             camera.startStream()
         self.redirectHome()
 
     def stopCam(self):
         logger.debug("stop cam")
-        for camera in StreamingServer.cameras:
+        for camera in Server.cameras:
             camera.stopStream()
         self.redirectHome()
 
     def picture(self):
         logger.debug("picture")
-        imageStream = StreamingServer.cameras[0].picture()
+        imageStream = Server.cameras[0].picture()
         self.sendStream('image/png', imageStream)
 
     def sendPageNotFound(self):

@@ -1,6 +1,6 @@
 #!../.venv/bin/python
 from belt import Belt
-from server import StreamingServer
+from server import Server
 from camera import Camera
 import logging
 import signal
@@ -14,7 +14,7 @@ logging.basicConfig(handlers=[logging.FileHandler("logs/latest.log"),
 
 def sigterm_handler(_signo, _stack_frame):
     logger.info("stopping server...")
-    StreamingServer.stop()
+    Server.stop()
     sys.exit(0)
 
 
@@ -25,8 +25,8 @@ if __name__ == "__main__":
 
     logger.info("starting")
     camera = Camera()
-    StreamingServer.addCamera(camera)
+    Server.addCamera(camera)
     try:
-        StreamingServer.start()
+        Server.start()
     finally:
         sigterm_handler(signal.SIGTERM, 0)
