@@ -5,6 +5,7 @@ from http import server
 from camera import Camera
 from belt import Belt
 
+logger = logging.getLogger(__name__)
 
 PAGE = """\
 <html>
@@ -29,7 +30,6 @@ PAGE = """\
 class StreamingServer(socketserver.ThreadingMixIn, server.HTTPServer):
     allow_reuse_address = True
     daemon_threads = True
-    process: multiprocessing.Process
 
     def __init__(self, address, streamingHandler):
         super().__init__(address, streamingHandler)
@@ -40,15 +40,7 @@ class StreamingServer(socketserver.ThreadingMixIn, server.HTTPServer):
             self.serve_forever()
         finally:
             # Stop recording when the script is interrupted
-            logging.info("Stream stopped.")
-
-    def start(self):
-        self.run()
-
-    def stop(self):
-        self.shutdown()
-        self.process.terminate()
-        self.process.kill()
+            logger.info("Stream stopped.")
 
 
 class Server():
@@ -59,10 +51,12 @@ class Server():
     def start():
         address = ('', Server.port)
         Server.streamServer = StreamingServer(address, StreamingHandler)
-        Server.streamServer.start()
+        Server.streamServer.run()
+
+        logger.info('Server running at', Server.streamServer.server_address)
 
     def stop():
-        Server.streamServer.stop()
+        Server.streamServer.shutdown()
         Server.streamServer.server_close()
         for camera in Server.cameras:
             camera.stopStream()
@@ -144,25 +138,25 @@ class StreamingHandler(server.BaseHTTPRequestHandler):
         self.end_headers()
 
     def showcase(self):
-        logging.info("showcase")
+        logger.debug("showcase")
         process = multiprocessing.Process(target=Belt.showcase)
         process.start()
         self.redirectHome()
 
     def startCam(self):
-        logging.info("start cam")
+        logger.debug("start cam")
         for camera in Server.cameras:
             camera.startStream()
         self.redirectHome()
 
     def stopCam(self):
-        logging.info("stop cam")
+        logger.debug("stop cam")
         for camera in Server.cameras:
             camera.stopStream()
         self.redirectHome()
 
     def picture(self):
-        logging.info("picture")
+        logger.debug("picture")
         imageStream = Server.cameras[0].picture()
 
         self.send_response(200)

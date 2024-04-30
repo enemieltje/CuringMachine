@@ -6,6 +6,8 @@ from picamera2 import Picamera2
 from picamera2.encoders import JpegEncoder
 from picamera2.outputs import FileOutput
 
+logger = logging.getLogger(__name__)
+
 
 class StreamingOutput(io.BufferedIOBase):
     def __init__(self):
@@ -40,19 +42,19 @@ class Camera:
         self.picam2.configure(self.videoConfig)
 
     def startStream(self):
-        logging.info("start stream")
+        logger.debug("start stream")
         self.isRecording = True
         self.picam2.start_recording(
             JpegEncoder(), FileOutput(self.streamingOutput))
 
     def stopStream(self):
-        logging.info("stop stream")
+        logger.debug("stop stream")
         self.isRecording = False
         self.picam2.stop_recording()
 
     def picture(self, path=(str(time.asctime()) + ".png")):
         wasRecording = self.isRecording
-        logging.info("taking picture:", path)
+        logger.debug("taking picture:", path)
 
         if wasRecording:
             self.stopStream()

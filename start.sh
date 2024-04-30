@@ -1,3 +1,5 @@
+mv logs/latest.log logs/old.log
+
 python -m venv --system-site-packages ./.venv
 
 ./.venv/bin/pip install numpy --upgrade
