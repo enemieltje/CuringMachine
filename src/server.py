@@ -9,6 +9,7 @@ from belt import Belt
 logger = logging.getLogger(__name__)
 
 PAGE = """\
+<!DOCTYPE html>
 <html>
 <head>
 <title>Curing Machine</title>
@@ -138,7 +139,7 @@ class StreamingHandler(server.BaseHTTPRequestHandler):
         self.end_headers()
 
     def favicon(self):
-        self.sendFile('image/x-icon', 'client/favicon.ico')
+        self.sendFile('image/x-icon', './client/favicon.ico')
 
     def showcase(self):
         logger.debug("showcase")
@@ -175,9 +176,9 @@ class StreamingHandler(server.BaseHTTPRequestHandler):
         self.wfile.write(content)
 
     def sendFile(self, contentType, filePath):
-
+        logger.debug("sending file: " + filePath)
         if not os.path.isfile(filePath):
-            logger.warn('File does not exist:', filePath)
+            logger.warn('File does not exist: ' + filePath)
             self.redirectHome()
             return
         f = open(filePath, encoding='utf-8')
