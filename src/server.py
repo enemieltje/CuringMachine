@@ -59,6 +59,9 @@ class StreamingHandler(server.SimpleHTTPRequestHandler):
         elif self.path == '/index.html':
             self.sendFile('src/client/index.html')
 
+        elif self.path == '/index.js':
+            self.sendFile('src/client/index.js')
+
         elif self.path == '/stream.mjpg':
             self.stream()
 

@@ -7,7 +7,9 @@
 
 <body>
     <h1>Pi Camera Live Stream Demo</h1>
-    <img src="stream.mjpg" width="640" height="480" alt="Camera Offline" />
+    <div id="streamdiv">
+        <!-- <img id="stream" src="stream.mjpg" width="640" height="480" alt="Camera Offline" /> -->
+    </div>
     <br>
     <a href="button/startcam">Start Preview</a>
     <a href="button/stopcam">Stop Preview</a>
@@ -15,6 +17,16 @@
     <a href="button/showcase">Showcase Motors</a>
     <br>
     <a href="button/picture">Take Picture</a>
+    <br>
+
+    <button onclick="startButton()">Start Preview</button>
+    <button onclick="stopButton()">Stop Preview</button>
+    <br>
+    <button onclick="showcaseButton()">Showcase Motors</button>
+    <br>
+    <button onclick="pictureButton()">Take Picture</button>
+
+    <script src="index.js"></script>
 </body>
 
 </html>
