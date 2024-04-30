@@ -32,6 +32,7 @@ class Camera:
         # Create Picamera2 instance and configure it
         self.picam2 = Picamera2()
         self.streamingOutput = StreamingOutput()
+        self.isRecording = False
         self.configure()
 
     def configure(self):
