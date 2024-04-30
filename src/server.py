@@ -78,10 +78,8 @@ class RequestHandler(server.SimpleHTTPRequestHandler):
             self.redirectHome()
 
         else:
+            # An unknown request was sent
             server.SimpleHTTPRequestHandler.do_GET(self)
-            # An unknown request was sent, so we return 404
-            logger.warn("Request for unknown path:", self.path)
-            self.sendPageNotFound()
 
     def stream(self):
         # Set up MJPEG streaming from the streamingOutput from the first camera

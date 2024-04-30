@@ -52,6 +52,10 @@ function pictureButton() {
     redirect('/button/picture')
 }
 
+function browseButton() {
+    redirect('/pictures')
+}
+
 function redirect(url){
     // add the current protocol, site name and port to the url
     // this allows this function to change to a different page on the same site
