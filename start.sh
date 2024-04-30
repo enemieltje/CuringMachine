@@ -1,4 +1,6 @@
+mkdir logs
 mv logs/latest.log logs/old.log
+touch logs/latest.log
 
 python -m venv --system-site-packages ./.venv
 
