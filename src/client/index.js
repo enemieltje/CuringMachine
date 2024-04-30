@@ -13,16 +13,18 @@ function toggleButton() {
         img.remove()
         button.innerHTML = 'Start Preview'
     }else{
-        get('/button/startcam')
-        const img = document.createElement('img')
-        img.setAttribute('id', 'stream')
-        img.setAttribute('src', 'stream.mjpg')
-        img.setAttribute('width', '640')
-        img.setAttribute('height', '480')
-        img.setAttribute('alt', 'Camera Offline')
+        get('/button/startcam').then(()=>{
 
-        const div = document.getElementById('streamdiv')
-        div.appendChild(img)
+            const img = document.createElement('img')
+            img.setAttribute('id', 'stream')
+            img.setAttribute('src', 'stream.mjpg')
+            img.setAttribute('width', '640')
+            img.setAttribute('height', '480')
+            img.setAttribute('alt', 'Camera Offline')
+
+            const div = document.getElementById('streamdiv')
+            div.appendChild(img)
+        })
         button.innerHTML = 'Stop Preview'
     }
     previewActive = !previewActive

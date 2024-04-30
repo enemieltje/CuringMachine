@@ -104,7 +104,6 @@ class StreamingHandler(server.SimpleHTTPRequestHandler):
                 self.end_headers()
                 self.wfile.write(frame)
                 self.wfile.write(b'\r\n')
-            self.sendFile('src/client/camera-icon-placeholder.jpg')
 
         except Exception as e:
             logging.warning(
