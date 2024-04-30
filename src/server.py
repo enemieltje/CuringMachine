@@ -68,7 +68,7 @@ class Server():
 
 
 # Class to handle HTTP requests
-class StreamingHandler(server.BaseHTTPRequestHandler):
+class StreamingHandler(server.SimpleHTTPRequestHandler):
     def do_GET(self):
         if self.path == '/':
             # Redirect root path to index.html
@@ -139,7 +139,8 @@ class StreamingHandler(server.BaseHTTPRequestHandler):
         self.end_headers()
 
     def favicon(self):
-        self.sendFile('image/x-icon', './client/favicon.ico')
+        self.path = 'client/favicon.ico'
+        server.SimpleHTTPRequestHandler.do_GET()
 
     def showcase(self):
         logger.debug("showcase")
