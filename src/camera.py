@@ -54,7 +54,7 @@ class Camera:
 
     def picture(self, path=(str(time.asctime()) + ".png")):
         wasRecording = self.isRecording
-        logger.debug("taking picture:", path)
+        logger.debug("taking picture: " + path)
 
         if wasRecording:
             self.stopStream()

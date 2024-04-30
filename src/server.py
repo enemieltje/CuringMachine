@@ -76,11 +76,7 @@ class StreamingHandler(server.BaseHTTPRequestHandler):
             self.end_headers()
 
         elif self.path == '/favicon.ico':
-            self.send_response(200)
-            self.send_header('Content-Type', 'image/x-icon')
-            self.send_header('Content-Length', 0)
-            self.end_headers()
-            return
+            self.favicon()
 
         elif self.path == '/index.html':
             self.homePage()
@@ -135,11 +131,6 @@ class StreamingHandler(server.BaseHTTPRequestHandler):
         # Serve the HTML page
         content = PAGE.encode('utf-8')
         self.sendStream('text/html', content)
-        # self.send_response(200)
-        # self.send_header('Content-Type', 'text/html')
-        # self.send_header('Content-Length', len(content))
-        # self.end_headers()
-        # self.wfile.write(content)
 
     def redirectHome(self):
         self.send_response(302)
@@ -171,10 +162,6 @@ class StreamingHandler(server.BaseHTTPRequestHandler):
         logger.debug("picture")
         imageStream = Server.cameras[0].picture()
         self.sendStream('image/png', imageStream)
-        # self.send_response(200)
-        # self.send_header('Content-Type', 'image/png')
-        # self.end_headers()
-        # self.wfile.write(imageStream)
 
     def sendPageNotFound(self):
         self.send_error(404)
