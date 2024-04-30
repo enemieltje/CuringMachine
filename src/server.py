@@ -2,7 +2,7 @@ import logging
 import socketserver
 import multiprocessing
 from http import server
-from camera import output, Camera
+from camera import Camera
 from belt import Belt
 
 
@@ -40,12 +40,10 @@ class StreamingServer(socketserver.ThreadingMixIn, server.HTTPServer):
             self.serve_forever()
         finally:
             # Stop recording when the script is interrupted
-            print("Stream stopped.")
+            logging.info("Stream stopped.")
 
     def start(self):
         self.run()
-        # self.process = multiprocessing.Process(target=self.run)
-        # self.process.start()
 
     def stop(self):
         self.shutdown()
@@ -60,7 +58,6 @@ class Server():
 
     def start():
         address = ('', Server.port)
-        # self.cameras[0].startStream()
         Server.streamServer = StreamingServer(address, StreamingHandler)
         Server.streamServer.start()
 
@@ -84,74 +81,91 @@ class StreamingHandler(server.BaseHTTPRequestHandler):
             self.end_headers()
 
         elif self.path == '/index.html':
-            # Serve the HTML page
-            content = PAGE.encode('utf-8')
-            self.send_response(200)
-            self.send_header('Content-Type', 'text/html')
-            self.send_header('Content-Length', len(content))
-            self.end_headers()
-            self.wfile.write(content)
+            self.homePage()
 
         elif self.path == '/stream.mjpg':
-            # Set up MJPEG streaming
-            self.send_response(200)
-            self.send_header('Age', 0)
-            self.send_header('Cache-Control', 'no-cache, private')
-            self.send_header('Pragma', 'no-cache')
-            self.send_header(
-                'Content-Type', 'multipart/x-mixed-replace; boundary=FRAME')
-            self.end_headers()
-            try:
-                while True:
-                    with output.condition:
-                        output.condition.wait()
-                        frame = output.frame
-                    self.wfile.write(b'--FRAME\r\n')
-                    self.send_header('Content-Type', 'image/jpeg')
-                    self.send_header('Content-Length', len(frame))
-                    self.end_headers()
-                    self.wfile.write(frame)
-                    self.wfile.write(b'\r\n')
-            except Exception as e:
-                logging.warning(
-                    'Removed streaming client %s: %s',
-                    self.client_address, str(e))
+            self.stream()
 
         elif self.path == '/button/startcam':
-            print("start cam")
-            for camera in Server.cameras:
-                camera.startStream()
-            self.send_response(302)
-            self.send_header('Location', '/index.html')
-            self.end_headers()
+            self.startCam()
 
         elif self.path == '/button/stopcam':
-            print("stop cam")
-            for camera in Server.cameras:
-                camera.stopStream()
-            self.send_response(302)
-            self.send_header('Location', '/index.html')
-            self.end_headers()
+            self.stopCam()
 
         elif self.path == '/button/picture':
-            print("picture")
-            imageStream = Server.cameras[0].picture()
-
-            content = PAGE.encode('utf-8')
-            self.send_response(200)
-            self.send_header('Content-Type', 'image/png')
-            self.end_headers()
-            self.wfile.write(imageStream)
+            self.picture()
 
         elif self.path == '/button/showcase':
-            print("showcase")
-            process = multiprocessing.Process(target=Belt.showcase)
-            process.start()
-            self.send_response(302)
-            self.send_header('Location', '/index.html')
-            self.end_headers()
+            self.showcase()
 
         else:
             # Handle 404 Not Found
             self.send_error(404)
             self.end_headers()
+
+    def stream(self):
+        # Set up MJPEG streaming
+        self.send_response(200)
+        self.send_header('Age', 0)
+        self.send_header('Cache-Control', 'no-cache, private')
+        self.send_header('Pragma', 'no-cache')
+        self.send_header(
+            'Content-Type', 'multipart/x-mixed-replace; boundary=FRAME')
+        self.end_headers()
+        output = Server.cameras[0].streamingOutput
+        try:
+            while True:
+                with output.condition:
+                    output.condition.wait()
+                    frame = output.frame
+                self.wfile.write(b'--FRAME\r\n')
+                self.send_header('Content-Type', 'image/jpeg')
+                self.send_header('Content-Length', len(frame))
+                self.end_headers()
+                self.wfile.write(frame)
+                self.wfile.write(b'\r\n')
+        except Exception as e:
+            logging.warning(
+                'Removed streaming client %s: %s',
+                self.client_address, str(e))
+
+    def homePage(self):
+        # Serve the HTML page
+        content = PAGE.encode('utf-8')
+        self.send_response(200)
+        self.send_header('Content-Type', 'text/html')
+        self.send_header('Content-Length', len(content))
+        self.end_headers()
+        self.wfile.write(content)
+
+    def redirectHome(self):
+        self.send_response(302)
+        self.send_header('Location', '/index.html')
+        self.end_headers()
+
+    def showcase(self):
+        logging.info("showcase")
+        process = multiprocessing.Process(target=Belt.showcase)
+        process.start()
+        self.redirectHome()
+
+    def startCam(self):
+        logging.info("start cam")
+        for camera in Server.cameras:
+            camera.startStream()
+        self.redirectHome()
+
+    def stopCam(self):
+        logging.info("stop cam")
+        for camera in Server.cameras:
+            camera.stopStream()
+        self.redirectHome()
+
+    def picture(self):
+        logging.info("picture")
+        imageStream = Server.cameras[0].picture()
+
+        self.send_response(200)
+        self.send_header('Content-Type', 'image/png')
+        self.end_headers()
+        self.wfile.write(imageStream)
