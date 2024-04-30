@@ -140,7 +140,7 @@ class StreamingHandler(server.SimpleHTTPRequestHandler):
 
     def favicon(self):
         self.path = 'client/favicon.ico'
-        server.SimpleHTTPRequestHandler.do_GET()
+        server.SimpleHTTPRequestHandler.do_GET(self)
 
     def showcase(self):
         logger.debug("showcase")
