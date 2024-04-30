@@ -10,32 +10,36 @@ logger = logging.getLogger(__name__)
 
 
 class Server(socketserver.ThreadingMixIn, server.HTTPServer):
+    # A simple HTTP server allowing IO over a webpage
+
     port = 8080
     cameras = list()
     instance: any
     allow_reuse_address = True
     daemon_threads = True
 
-    def __init__(self, address, streamingHandler):
-        super().__init__(address, streamingHandler)
+    def __init__(self, address, requestHandler):
+        super().__init__(address, requestHandler)
 
     def run(self):
         try:
-            # Set up and start the streaming server
+            # Set up and start the server
             self.serve_forever()
         finally:
-            # Stop recording when the script is interrupted
+            # Stop serving when the script is interrupted
             logger.info("Stream stopped.")
 
     def start():
+        # This creates an instance of the server class and runs it
         address = ('', Server.port)
-        Server.instance = Server(address, StreamingHandler)
+        Server.instance = Server(address, RequestHandler)
         Server.instance.run()
 
         logger.info('Server running at',
                     Server.instance.server_address)
 
     def stop():
+        # This shuts the instance down and stops all camera streams
         Server.instance.shutdown()
         Server.instance.server_close()
         for camera in Server.cameras:
@@ -44,13 +48,14 @@ class Server(socketserver.ThreadingMixIn, server.HTTPServer):
     def addCamera(camera: Camera):
         Server.cameras.append(camera)
 
-# Class to handle HTTP requests
 
+class RequestHandler(server.SimpleHTTPRequestHandler):
+    # This handles the requests sent to the http server (from the fetch function in index.js for example)
+    # Requests always contain a path/url that describes what the request wants from the server
 
-class StreamingHandler(server.SimpleHTTPRequestHandler):
     def do_GET(self):
+        # read the request url and call the appropriate function
         if self.path == '/':
-            # Redirect root path to index.html
             self.redirectHome(permanently=True)
 
         elif self.path == '/favicon.ico':
@@ -78,12 +83,12 @@ class StreamingHandler(server.SimpleHTTPRequestHandler):
             self.showcase()
 
         else:
-            # Handle 404 Not Found
+            # An unknown request was sent, so we return 404
             logger.warn("Request for unknown path:", self.path)
             self.sendPageNotFound()
 
     def stream(self):
-        # Set up MJPEG streaming
+        # Set up MJPEG streaming from the streamingOutput from the first camera
         self.send_response(200)
         self.send_header('Age', 0)
         self.send_header('Cache-Control', 'no-cache, private')
@@ -91,9 +96,10 @@ class StreamingHandler(server.SimpleHTTPRequestHandler):
         self.send_header(
             'Content-Type', 'multipart/x-mixed-replace; boundary=FRAME')
         self.end_headers()
-        output = Server.cameras[0].streamingOutput
+        output = Server.cameras[0].streamingOutput # TODO: Add multi camera support
         try:
             while Server.cameras[0].isStreaming:
+                # Send frames from the buffer while the camera is streaming
                 with output.condition:
                     output.condition.wait()
                     frame = output.frame
@@ -106,6 +112,7 @@ class StreamingHandler(server.SimpleHTTPRequestHandler):
                 self.wfile.write(b'\r\n')
 
         except Exception as e:
+            # If the stream stopped or crashed, send a warning
             logging.warning(
                 'Removed streaming client %s: %s',
                 self.client_address, str(e))
@@ -119,12 +126,16 @@ class StreamingHandler(server.SimpleHTTPRequestHandler):
         self.end_headers()
 
     def showcase(self):
+        # Show that the motors are operational
         logger.debug("showcase")
+
+        # Start the belt showcase as a separate process so that it does not freeze the webpage
         process = multiprocessing.Process(target=Belt.showcase)
         process.start()
         self.redirectHome()
 
     def startCam(self):
+        # TODO: Allow starting/stopping a single camera?
         logger.debug("start cam")
         for camera in Server.cameras:
             camera.startStream()
@@ -137,6 +148,8 @@ class StreamingHandler(server.SimpleHTTPRequestHandler):
         self.redirectHome()
 
     def picture(self):
+        # Take a picture and send the imagestream directly to the webpage
+        # TODO: Open this in a new tab
         logger.debug("picture")
         imageStream = Server.cameras[0].picture()
         self.sendStream('image/png', imageStream)
@@ -146,6 +159,7 @@ class StreamingHandler(server.SimpleHTTPRequestHandler):
         self.end_headers()
 
     def sendStream(self, contentType, content):
+        # This sends a file in the form of a byte stream to the webpage
         self.send_response(200)
         self.send_header('Content-Type', contentType)
         self.send_header('Content-Length', len(content))
@@ -153,10 +167,15 @@ class StreamingHandler(server.SimpleHTTPRequestHandler):
         self.wfile.write(content)
 
     def sendFile(self, filePath):
+        # This opens a file on the raspberry and sends that to the webpage
         logger.debug("sending file: " + filePath)
         if not os.path.isfile(filePath):
+            # If the file does not exist, send a warning and redirect to the home page
             logger.warn('File does not exist: ' + filePath)
             self.redirectHome()
             return
+
+        # The built-in class "SimpleHTTPRequestHandler", which this class extends, already has this functionality
+        # This wrapper allows us to have the request path and the file path not be the same, and handle non-existent files correctly as above
         self.path = filePath
         server.SimpleHTTPRequestHandler.do_GET(self)

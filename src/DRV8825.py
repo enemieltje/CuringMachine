@@ -1,6 +1,8 @@
 import gpiozero as GPIO
 import time
 
+# This is a library for our motor drive HAT (with the DRV8825 chip) that I imported as a file.
+
 MotorDir = [
     'forward',
     'backward',
@@ -11,54 +13,54 @@ ControlMode = [
     'softward',
 ]
 
+
 class DRV8825():
     def __init__(self, dir_pin, step_pin, enable_pin, mode_pins):
 
-        
         self.mode_pins = mode_pins
         self.dir_pin = dir_pin
         self.enable_pin = enable_pin
         self.step_pin = step_pin
-        
+
         self.dir = GPIO.LED(self.dir_pin)
-        self.step = GPIO.LED(self.step_pin)        
+        self.step = GPIO.LED(self.step_pin)
         self.enable = GPIO.LED(self.enable_pin)
         self.mode_1 = GPIO.LED(self.mode_pins[0])
         self.mode_2 = GPIO.LED(self.mode_pins[1])
         self.mode_3 = GPIO.LED(self.mode_pins[2])
-        
-        #GPIO.setmode(GPIO.BCM)
-        #GPIO.setwarnings(False)
-        #GPIO.setup(self.dir_pin, GPIO.OUT)
-        #GPIO.setup(self.step_pin, GPIO.OUT)
-        #GPIO.setup(self.enable_pin, GPIO.OUT)
-        #GPIO.setup(self.mode_pins, GPIO.OUT)
+
+        # GPIO.setmode(GPIO.BCM)
+        # GPIO.setwarnings(False)
+        # GPIO.setup(self.dir_pin, GPIO.OUT)
+        # GPIO.setup(self.step_pin, GPIO.OUT)
+        # GPIO.setup(self.enable_pin, GPIO.OUT)
+        # GPIO.setup(self.mode_pins, GPIO.OUT)
         self.control_pin = {
-          dir_pin: self.dir,
-          enable_pin: self.enable,
-          step_pin: self.step,
-          mode_pins[0]: self.mode_1,
-          mode_pins[1]: self.mode_2,
-          mode_pins[2]: self.mode_3
+            dir_pin: self.dir,
+            enable_pin: self.enable,
+            step_pin: self.step,
+            mode_pins[0]: self.mode_1,
+            mode_pins[1]: self.mode_2,
+            mode_pins[2]: self.mode_3
         }
-        
+
     def digital_write(self, pin, value):
         if value:
-          self.control_pin[pin].on()
+            self.control_pin[pin].on()
         else:
-          self.control_pin[pin].off()
-          
-        #GPIO.output(pin, value)
-        
+            self.control_pin[pin].off()
+
+        # GPIO.output(pin, value)
+
     def Stop(self):
         self.digital_write(self.enable_pin, 0)
-        
+
     def Configure_mode(self, microstep):
         j = 0
         for i in microstep:
-          self.digital_write(self.mode_pins[j], i)
-          j = j+1
-    
+            self.digital_write(self.mode_pins[j], i)
+            j = j+1
+
     def SetMicroStep(self, mode, stepformat):
         """
         (1) mode
@@ -75,12 +77,12 @@ class DRV8825():
                      '1/16step': (0, 0, 1),
                      '1/32step': (1, 0, 1)}
 
-        print("Control mode:",mode)
+        print("Control mode:", mode)
         if (mode == ControlMode[1]):
             print("set pins")
-            #self.digital_write(self.mode_pins, microstep[stepformat])
+            # self.digital_write(self.mode_pins, microstep[stepformat])
             self.Configure_mode(microstep[stepformat])
-        
+
     def TurnStep(self, Dir, steps, stepdelay=0.005):
         if (Dir == MotorDir[0]):
             print("forward")
@@ -97,8 +99,8 @@ class DRV8825():
 
         if (steps == 0):
             return
-            
-        print("turn step:",steps)
+
+        print("turn step:", steps)
         for i in range(steps):
             self.digital_write(self.step_pin, True)
             time.sleep(stepdelay)

@@ -7,24 +7,20 @@
 
 <body>
     <h1>Pi Camera Live Stream Demo</h1>
+
+    <!-- This div is where the preview stream will come -->
     <div id="streamdiv">
-        <!-- <img id="stream" src="stream.mjpg" width="640" height="480" alt="Camera Offline" /> -->
     </div>
     <br>
-    <!-- <a href="button/startcam">Start Preview</a>
-    <a href="button/stopcam">Stop Preview</a>
-    <br>
-    <a href="button/showcase">Showcase Motors</a>
-    <br>
-    <a href="button/picture">Take Picture</a>
-    <br> -->
 
+    <!-- These buttons each call a javascript function in index.js -->
     <button id='toggleButton' onclick="toggleButton()">Start Preview</button>
     <br>
     <button id='showcaseButton' onclick="showcaseButton()">Showcase Motors</button>
     <br>
     <button id='pictureButton' onclick="pictureButton()">Take Picture</button>
 
+    <!-- include the script -->
     <script src="index.js"></script>
 </body>
 
