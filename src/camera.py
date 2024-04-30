@@ -31,6 +31,7 @@ class Camera:
     captureConfig: dict
     isStreaming: bool
     streamingOutput: StreamingOutput
+    pictureSaveDir = 'pictures/'
 
     def __init__(self) -> None:
         # Create Picamera2 instance and configure it
@@ -74,12 +75,12 @@ class Camera:
 
         # Take the picture
         self.picam2.switch_mode_and_capture_file(
-            self.captureConfig, path, "main", delay=10)
+            self.captureConfig, Camera.pictureSaveDir + path, "main", delay=10)
 
         # Restart stream if needed
         if wasStreaming:
             self.startStream()
 
         # Return the picture as a Byte Stream so it can be sent to a webpage directly
-        with open(path, 'rb') as file_handle:
+        with open(Camera.pictureSaveDir + path, 'rb') as file_handle:
             return file_handle.read()
