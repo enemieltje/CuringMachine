@@ -7,13 +7,13 @@ function testButton() {
 function toggleButton() {
     const button = document.getElementById('toggleButton')
     if (previewActive){
-        get('/button/stopcam')
+        fetch('/button/stopcam')
 
         const img = document.getElementById('stream')
         img.remove()
         button.innerHTML = 'Start Preview'
     }else{
-        get('/button/startcam').then(()=>{
+        fetch('/button/startcam').then(()=>{
 
             const img = document.createElement('img')
             img.setAttribute('id', 'stream')
@@ -31,17 +31,11 @@ function toggleButton() {
 }
 
 function showcaseButton() {
-    get('/button/showcase')
+    fetch('/button/showcase')
 }
 
 function pictureButton() {
     redirect('/button/picture')
-}
-
-
-function get(url){
-    console.debug("getting url:", window.location.host + url)
-    fetch(url)
 }
 
 function redirect(url){
