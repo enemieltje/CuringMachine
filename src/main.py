@@ -1,7 +1,5 @@
 #!../.venv/bin/python
-from belt import Belt
-from server import Server
-from camera import Camera
+from curingMachine import CuringMachine
 import logging
 import signal
 import sys
@@ -13,13 +11,12 @@ logging.basicConfig(handlers=[logging.FileHandler("logs/latest.log"),
                     encoding='utf-8', level=logging.DEBUG)
 
 # Gracefully stop the server when the program exits or crashes
-# This makes sure to stop the cameras and later unpower the steppers
+# This makes sure to stop the cameras and unpower the steppers
 
 
 def sigterm_handler(_signo, _stack_frame):
     logger.info("stopping server...")
-    Server.stop()
-    # TODO: stop stepper motors
+    CuringMachine.stop()
     sys.exit(0)
 
 
@@ -29,9 +26,7 @@ if __name__ == "__main__":
 
     # Start the server and add the camera(s)
     logger.info("starting")
-    camera = Camera()
-    Server.addCamera(camera)
     try:
-        Server.start()
+        CuringMachine.start()
     finally:
         sigterm_handler(signal.SIGTERM, 0)

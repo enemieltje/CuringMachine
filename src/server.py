@@ -5,6 +5,7 @@ import multiprocessing
 from http import server
 from camera import Camera
 from belt import Belt
+from curingMachine import CuringMachine
 
 logger = logging.getLogger(__name__)
 
@@ -13,7 +14,6 @@ class Server(socketserver.ThreadingMixIn, server.HTTPServer):
     # A simple HTTP server allowing IO over a webpage
 
     port = 8080
-    cameras = list()
     instance: any
     allow_reuse_address = True
     daemon_threads = True
@@ -42,11 +42,6 @@ class Server(socketserver.ThreadingMixIn, server.HTTPServer):
         # This shuts the instance down and stops all camera streams
         Server.instance.shutdown()
         Server.instance.server_close()
-        for camera in Server.cameras:
-            camera.stopStream()
-
-    def addCamera(camera: Camera):
-        Server.cameras.append(camera)
 
 
 class RequestHandler(server.SimpleHTTPRequestHandler):
@@ -71,16 +66,20 @@ class RequestHandler(server.SimpleHTTPRequestHandler):
             self.stream()
 
         elif self.path == '/button/startcam':
-            self.startCam()
+            CuringMachine.startCam()
+            self.redirectHome()
 
         elif self.path == '/button/stopcam':
-            self.stopCam()
+            CuringMachine.stopCam()
+            self.redirectHome()
 
         elif self.path == '/button/picture':
-            self.picture()
+            CuringMachine.picture()
+            self.redirectHome()
 
         elif self.path == '/button/showcase':
-            self.showcase()
+            CuringMachine.showcase()
+            self.redirectHome()
 
         else:
             # An unknown request was sent, so we return 404
@@ -96,9 +95,10 @@ class RequestHandler(server.SimpleHTTPRequestHandler):
         self.send_header(
             'Content-Type', 'multipart/x-mixed-replace; boundary=FRAME')
         self.end_headers()
-        output = Server.cameras[0].streamingOutput # TODO: Add multi camera support
+        # TODO: Add multi camera support
+        output = CuringMachine.cameras[0].streamingOutput
         try:
-            while Server.cameras[0].isStreaming:
+            while CuringMachine.cameras[0].isStreaming:
                 # Send frames from the buffer while the camera is streaming
                 with output.condition:
                     output.condition.wait()
@@ -124,35 +124,6 @@ class RequestHandler(server.SimpleHTTPRequestHandler):
             self.send_response(302)
         self.send_header('Location', '/index.html')
         self.end_headers()
-
-    def showcase(self):
-        # Show that the motors are operational
-        logger.debug("showcase")
-
-        # Start the belt showcase as a separate process so that it does not freeze the webpage
-        process = multiprocessing.Process(target=Belt.showcase)
-        process.start()
-        self.redirectHome()
-
-    def startCam(self):
-        # TODO: Allow starting/stopping a single camera?
-        logger.debug("start cam")
-        for camera in Server.cameras:
-            camera.startStream()
-        self.redirectHome()
-
-    def stopCam(self):
-        logger.debug("stop cam")
-        for camera in Server.cameras:
-            camera.stopStream()
-        self.redirectHome()
-
-    def picture(self):
-        # Take a picture and send the imagestream directly to the webpage
-        # TODO: Open this in a new tab
-        logger.debug("picture")
-        imageStream = Server.cameras[0].picture()
-        self.sendStream('image/png', imageStream)
 
     def sendPageNotFound(self):
         self.send_error(404)
