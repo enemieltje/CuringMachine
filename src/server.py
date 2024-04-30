@@ -89,24 +89,19 @@ class StreamingHandler(server.SimpleHTTPRequestHandler):
             'Content-Type', 'multipart/x-mixed-replace; boundary=FRAME')
         self.end_headers()
         output = Server.cameras[0].streamingOutput
-        # placeholder = open('src/client/camera-icon-placeholder.jpg', 'rb')
         try:
-            while True:
-                if Server.cameras[0].isRecording:
-                    with output.condition:
-                        output.condition.wait()
-                        frame = output.frame
+            while Server.cameras[0].isStreaming:
+                with output.condition:
+                    output.condition.wait()
+                    frame = output.frame
 
-                else:
-                    frame = bytes(20000)
-
-                logger.debug(len(frame))
                 self.wfile.write(b'--FRAME\r\n')
                 self.send_header('Content-Type', 'image/jpeg')
                 self.send_header('Content-Length', len(frame))
                 self.end_headers()
                 self.wfile.write(frame)
                 self.wfile.write(b'\r\n')
+            self.sendFile('src/client/camera-icon-placeholder.jpg')
 
         except Exception as e:
             logging.warning(

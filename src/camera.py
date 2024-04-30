@@ -24,7 +24,7 @@ class Camera:
     picam2: Picamera2
     videoConfig: dict
     captureConfig: dict
-    isRecording: bool
+    isStreaming: bool
     streamingOutput: StreamingOutput
 
     def __init__(self) -> None:
@@ -32,7 +32,7 @@ class Camera:
         # Create Picamera2 instance and configure it
         self.picam2 = Picamera2()
         self.streamingOutput = StreamingOutput()
-        self.isRecording = False
+        self.isStreaming = False
         self.configure()
 
     def configure(self):
@@ -44,17 +44,17 @@ class Camera:
 
     def startStream(self):
         logger.debug("start stream")
-        self.isRecording = True
+        self.isStreaming = True
         self.picam2.start_recording(
             JpegEncoder(), FileOutput(self.streamingOutput))
 
     def stopStream(self):
         logger.debug("stop stream")
-        self.isRecording = False
+        self.isStreaming = False
         self.picam2.stop_recording()
 
     def picture(self, path=(str(time.asctime()) + ".png")):
-        wasRecording = self.isRecording
+        wasRecording = self.isStreaming
         logger.debug("taking picture: " + path)
 
         if wasRecording:
