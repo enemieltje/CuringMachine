@@ -33,11 +33,11 @@ function pictureButton() {
 
 
 function get(url){
-    console.debug("getting url:", url)
+    console.debug("getting url:", window.location.host + url)
     fetch(window.location.host + url)
 }
 
 function redirect(url){
-    console.debug("redirecting to:", url)
+    console.debug("redirecting to:", window.location.host + url)
     window.location.href = window.location.host + url
 }
