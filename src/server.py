@@ -1,10 +1,7 @@
 import logging
 import os
 import socketserver
-import multiprocessing
 from http import server
-from camera import Camera
-from belt import Belt
 from curingMachine import CuringMachine
 
 logger = logging.getLogger(__name__)

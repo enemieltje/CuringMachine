@@ -2,7 +2,6 @@ import logging
 import multiprocessing
 from belt import Belt
 from camera import Camera
-from server import Server
 
 logger = logging.getLogger(__name__)
 
@@ -42,11 +41,9 @@ class CuringMachine():
     def start():
         # add all the cameras and start the web server
         CuringMachine.addCamera(Camera())
-        Server.start()
 
     def stop():
         # stop all the cameras and the web server
         # TODO: stop stepper motors
         for camera in CuringMachine.cameras:
             camera.stopStream()
-        Server.stop()
