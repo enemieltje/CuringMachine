@@ -97,7 +97,7 @@ class StreamingHandler(server.SimpleHTTPRequestHandler):
                         output.condition.wait()
                         frame = output.frame
                 else:
-                    frame = []
+                    frame = bytes(0)
 
                 self.wfile.write(b'--FRAME\r\n')
                 self.send_header('Content-Type', 'image/jpeg')
