@@ -8,6 +8,7 @@ import sys
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(filename='logs/latest.log',
+                    filemode='w',
                     encoding='utf-8', level=logging.DEBUG)
 
 
