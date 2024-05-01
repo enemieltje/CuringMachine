@@ -2,6 +2,7 @@ import logging
 import os
 import socketserver
 from http import server
+from config import Config
 from curingMachine import CuringMachine
 
 logger = logging.getLogger(__name__)
@@ -10,7 +11,7 @@ logger = logging.getLogger(__name__)
 class Server(socketserver.ThreadingMixIn, server.HTTPServer):
     # A simple HTTP server allowing IO over a webpage
 
-    port = 8080
+    port = Config.getWebPort()
     instance: any
     allow_reuse_address = True
     daemon_threads = True
@@ -19,6 +20,8 @@ class Server(socketserver.ThreadingMixIn, server.HTTPServer):
         super().__init__(address, requestHandler)
 
     def run(self):
+        logger.info('Server running at' +
+                    Server.instance.server_address)
         try:
             # Set up and start the server
             self.serve_forever()
@@ -31,9 +34,6 @@ class Server(socketserver.ThreadingMixIn, server.HTTPServer):
         address = ('', Server.port)
         Server.instance = Server(address, RequestHandler)
         Server.instance.run()
-
-        logger.info('Server running at',
-                    Server.instance.server_address)
 
     def stop():
         # This shuts the instance down and stops all camera streams

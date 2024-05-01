@@ -158,6 +158,7 @@ cython_debug/
 # Local Folders
 logs
 pictures
+config
 
 # PyCharm
 #  JetBrains specific template is maintained in a separate JetBrains.gitignore that can

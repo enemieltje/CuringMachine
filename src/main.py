@@ -2,6 +2,7 @@
 import logging
 import signal
 import sys
+from config import Config
 from server import Server
 from curingMachine import CuringMachine
 
@@ -16,6 +17,7 @@ def sigterm_handler(_signo, _stack_frame):
     # Gracefully stop the server when the program exits or crashes
     # This makes sure to stop the cameras and unpower the steppers
     logger.info("stopping server...")
+    Config.save()
     CuringMachine.stop()
     Server.stop()
     sys.exit(0)

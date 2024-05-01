@@ -31,7 +31,8 @@ class CuringMachine():
 
     def picture(index=0):
         # Take a picture and send the imagestream directly to the webpage
-        # TODO: Open this in a new tab
+        # TODO: Do this in a separate process
+        # TODO: Check if the file exists already to avoid overwriting old pictures
         logger.debug("picture")
         return CuringMachine.cameras[index].picture()
 

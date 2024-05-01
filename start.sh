@@ -1,6 +1,7 @@
 # Create all the required files and folders
 mkdir logs
 mkdir pictures
+mkdir config
 mv logs/latest.log logs/old.log
 touch logs/latest.log
 

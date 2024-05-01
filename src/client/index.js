@@ -48,7 +48,7 @@ function showcaseButton() {
 
 function pictureButton() {
     // make a request to the server to take a picture, and open it
-    // TODO: open in a new tab instead of redirecting to it
+    // TODO: request the url/name of the taken picture and redirect to that
     redirect('/button/picture')
 }
 
@@ -56,6 +56,7 @@ function browseButton() {
     redirect('/pictures')
 }
 
+// Deprecated
 function redirect(url){
     // add the current protocol, site name and port to the url
     // this allows this function to change to a different page on the same site
