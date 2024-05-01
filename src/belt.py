@@ -1,6 +1,11 @@
+import logging
+import multiprocessing
+from config import Config
 import gpiozero as GPIO
 import time
 from DRV8825 import DRV8825
+
+logger = logging.getLogger(__name__)
 
 
 class Belt:
@@ -23,3 +28,19 @@ class Belt:
         time.sleep(0.5)
         motor.TurnStep(Dir='backward', steps=400, stepdelay=0.005)
         motor.Stop()
+
+    def start():
+        logger.debug("starting belt")
+        Belt.motor1.SetMicroStep('hardward')
+        Belt.motor2.SetMicroStep('hardward')
+        process1 = multiprocessing.Process(
+            target=Belt.startMotor, args=(Belt.motor1))
+        process2 = multiprocessing.Process(
+            target=Belt.startMotor, args=(Belt.motor2))
+        process1.start()
+        process2.start()
+
+    def startMotor(motor):
+        speed = Config.getBeltSpeed()
+        logger.debug("starting motor with speed %i", speed)
+        motor.TurnStep(Dir='forward', steps=200, stepdelay=1/speed)

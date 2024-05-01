@@ -50,7 +50,7 @@ class Config():
         Config.__default['Metadata'] = {'version': '0'}
         Config.__default['WebConfig'] = {'port': '8080',
                                          'address': ''}
-        Config.__default['Parameters'] = {'beltSpeed': '10'}
+        Config.__default['Parameters'] = {'beltSpeed': '200'}
         logger.debug(Config.__default)
 
     def __loadDefault():
