@@ -2,6 +2,7 @@
 import logging
 import signal
 import sys
+from belt import Belt
 from config import Config
 from server import Server
 from curingMachine import CuringMachine
@@ -16,7 +17,8 @@ logging.basicConfig(handlers=[logging.FileHandler("logs/latest.log"),
 def sigterm_handler(_signo, _stack_frame):
     # Gracefully stop the server when the program exits or crashes
     # This makes sure to stop the cameras and unpower the steppers
-    logger.info("stopping server...")
+    logger.info("stopping...")
+    Belt.stop()
     Config.save()
     CuringMachine.stop()
     Server.stop()

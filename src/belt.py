@@ -46,6 +46,11 @@ class Belt:
         logger.debug("starting motor with speed %i", speed)
         motor = Belt.motors[index]
         motor.TurnStep(Dir='forward', steps=200, stepdelay=1/speed)
+        motor.stop()
+
+    def stop():
+        for motor in Belt.motors:
+            motor.stop()
 
 
 Belt.configure()
