@@ -31,8 +31,8 @@ class Belt:
 
     def start():
         logger.debug("starting belt")
-        Belt.motor1.SetMicroStep('hardward')
-        Belt.motor2.SetMicroStep('hardward')
+        Belt.motor1.SetMicroStep('hardward', '1/4step')
+        Belt.motor2.SetMicroStep('hardward', '1/4step')
         process1 = multiprocessing.Process(
             target=Belt.startMotor, args=(Belt.motor1))
         process2 = multiprocessing.Process(
