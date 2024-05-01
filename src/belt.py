@@ -12,10 +12,10 @@ class Belt:
     motors = list()
 
     def configure():
-        Belt.motors[0] = DRV8825(dir_pin=13, step_pin=19,
-                                 enable_pin=12, mode_pins=(16, 17, 20))
-        Belt.motors[1] = DRV8825(dir_pin=24, step_pin=18,
-                                 enable_pin=4, mode_pins=(21, 22, 27))
+        Belt.motors.append(DRV8825(dir_pin=13, step_pin=19,
+                                   enable_pin=12, mode_pins=(16, 17, 20)))
+        Belt.motors.append(DRV8825(dir_pin=24, step_pin=18,
+                                   enable_pin=4, mode_pins=(21, 22, 27)))
         for motor in Belt.motors:
             motor.SetMicroStep('hardward', '1/4step')
 
