@@ -20,7 +20,7 @@ class Config():
         path = Config.configFolder + name
         if os.path.exists(path):
             Config.__config.read(path)
-            if not (Config.__getint('Version') == '0'):
+            if not (Config.__getint('Metadata', 'Version') == '0'):
                 logger.warn("Config %s is outdated!", name)
                 Config.__loadDefault()
                 Config.currentConfig = ''
@@ -36,14 +36,14 @@ class Config():
         Config.__config.write(Config.currentConfig)
 
     def getBeltSpeed() -> int:
-        return Config.__getint('Parameters.beltSpeed')
+        return Config.__getint('Parameters', 'beltSpeed')
 
     def getWebPort() -> int:
-        return Config.__getint('WebConfig.port')
+        return Config.__getint('WebConfig', 'port')
 
     def __createDefault():
         Config.__default = configparser.ConfigParser()
-        Config.__default['Version'] = '0'
+        Config.__default['Metadata'] = {'version': '0'}
         Config.__default['WebConfig'] = {'port': '8080',
                                          'address': ''}
         Config.__default['Parameters'] = {'beltSpeed': '10'}
@@ -51,11 +51,11 @@ class Config():
     def __loadDefault():
         Config.__config = Config.__default
 
-    def __getint(name) -> int:
+    def __getint(section, name) -> int:
         logger.debug("getting value %s from config %s",
                      name, Config.currentConfig)
-        default = Config.__default.getint(name)
-        return Config.__config.getint(name, default)
+        default = Config.__default[section].getint(name)
+        return Config.__config[section].getint(name, default)
 
 
 Config.start()
