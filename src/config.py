@@ -56,7 +56,10 @@ class Config():
         logger.debug("getting value %s from config %s",
                      name, Config.currentConfig)
         default = Config.__default[section].getint(name)
-        return Config.__config[section].getint(name, fallback=default)
+        if Config.__config.has_section(section):
+            return Config.__config[section].getint(name, fallback=default)
+        else:
+            return default
 
 
 Config.start()
