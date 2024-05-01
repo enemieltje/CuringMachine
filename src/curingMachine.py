@@ -37,10 +37,12 @@ class CuringMachine():
         return CuringMachine.cameras[index].picture()
 
     def addCamera(camera: Camera):
+        logger.debug('adding camera')
         CuringMachine.cameras.append(camera)
 
     def start():
         # add all the cameras and start the web server
+        logger.debug('starting curing machine')
         CuringMachine.addCamera(Camera())
 
     def stop():

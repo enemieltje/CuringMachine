@@ -3,7 +3,6 @@ import os
 import logging
 
 logger = logging.getLogger(__name__)
-logger.level = logging.DEBUG
 
 
 class Config():
@@ -13,9 +12,11 @@ class Config():
     __default = configparser.ConfigParser()
 
     def start():
+        logger.debug('starting config')
         Config.__createDefault()
 
     def open(name="default.ini"):
+        logger.debug('opening ' + name)
         Config.save()
         Config.currentConfig = name
         path = Config.configFolder + name
@@ -40,14 +41,17 @@ class Config():
         return Config.__getint('Parameters', 'beltSpeed')
 
     def getWebPort() -> int:
+        logger.debug('getting web port')
         return Config.__getint('WebConfig', 'port')
 
     def __createDefault():
+        logger.debug('loading default')
         Config.__default = configparser.ConfigParser()
         Config.__default['Metadata'] = {'version': '0'}
         Config.__default['WebConfig'] = {'port': '8080',
                                          'address': ''}
         Config.__default['Parameters'] = {'beltSpeed': '10'}
+        logger.debug(Config.__default)
 
     def __loadDefault():
         Config.__config = Config.__default

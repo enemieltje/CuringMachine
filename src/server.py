@@ -31,12 +31,14 @@ class Server(socketserver.ThreadingMixIn, server.HTTPServer):
 
     def start():
         # This creates an instance of the server class and runs it
+        logger.debug('starting server...')
         address = ('', Server.port)
         Server.instance = Server(address, RequestHandler)
         Server.instance.run()
 
     def stop():
         # This shuts the instance down and stops all camera streams
+        logger.debug('stopping server')
         Server.instance.shutdown()
         Server.instance.server_close()
 
