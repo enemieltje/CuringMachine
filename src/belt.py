@@ -35,9 +35,9 @@ class Belt:
     def start():
         logger.debug("starting belt")
         process1 = multiprocessing.Process(
-            target=Belt.startMotor, args=(0))
+            target=Belt.startMotor, args=((0)))
         process2 = multiprocessing.Process(
-            target=Belt.startMotor, args=(1))
+            target=Belt.startMotor, args=((1)))
         process1.start()
         process2.start()
 
