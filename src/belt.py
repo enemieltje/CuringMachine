@@ -12,6 +12,7 @@ class Belt:
     motors = list()
 
     def configure():
+        # create each of the motors and set their microstep config
         Belt.motors.append(DRV8825(dir_pin=13, step_pin=19,
                                    enable_pin=12, mode_pins=(16, 17, 20)))
         Belt.motors.append(DRV8825(dir_pin=24, step_pin=18,
@@ -19,21 +20,12 @@ class Belt:
         for motor in Belt.motors:
             motor.SetMicroStep('hardward', '1/4step')
 
-    def showcase():
-        # Show that the motors are active by turning them a bit
-        time.sleep(1)
-        Belt.showcaseMotor(Belt.motors[0])
-        time.sleep(2)
-        Belt.showcaseMotor(Belt.motors[1])
-
-    def showcaseMotor(motor: DRV8825):
-        motor.TurnStep(Dir='forward', steps=200, stepdelay=0.005)
-        time.sleep(0.5)
-        motor.TurnStep(Dir='backward', steps=400, stepdelay=0.005)
-        motor.Stop()
-
     def start():
+        # start running the belt
+        # TODO: start the belt continuously instead of 200 steps
         logger.debug("starting belt")
+
+        # start a separate process for each of the motors so that we don't freeze the program
         process1 = multiprocessing.Process(
             target=Belt.startMotor, args=([0]))
         process2 = multiprocessing.Process(
@@ -42,6 +34,7 @@ class Belt:
         process2.start()
 
     def startMotor(index):
+        # start turning a single motor
         speed = Config.getBeltSpeed()
         logger.debug("starting motor with speed %i", speed)
         motor = Belt.motors[index]
@@ -49,6 +42,8 @@ class Belt:
         motor.Stop()
 
     def stop():
+        # stop each of the motors
+        logger.info('stopping motors')
         for motor in Belt.motors:
             motor.Stop()
 

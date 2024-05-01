@@ -14,9 +14,7 @@ class CuringMachine():
         # Show that the motors are operational
         logger.debug("showcase")
 
-        # Start the belt showcase as a separate process so that it does not freeze the webpage
-        # process = multiprocessing.Process(target=Belt.showcase)
-        # process.start()
+        # Start the belt (this function only start the belt for one second for now)
         Belt.start()
 
     def startCam():
