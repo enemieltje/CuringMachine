@@ -21,7 +21,7 @@ class Server(socketserver.ThreadingMixIn, server.HTTPServer):
 
     def run(self):
         logger.info('Server running at' +
-                    Server.instance.server_address)
+                    str(Server.instance.server_address))
         try:
             # Set up and start the server
             self.serve_forever()
@@ -34,7 +34,7 @@ class Server(socketserver.ThreadingMixIn, server.HTTPServer):
         logger.debug('starting server...')
         logger.debug('web port %i', Config.getWebPort())
         logger.debug('sever port %i', Server.port)
-        address = ('', Server.port)
+        address = ('', str(Server.port))
         Server.instance = Server(address, RequestHandler)
         Server.instance.run()
 
