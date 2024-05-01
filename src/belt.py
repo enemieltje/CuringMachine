@@ -9,7 +9,7 @@ logger = logging.getLogger(__name__)
 
 class Belt:
     # The belt contains two motors with different pins
-    motors: list
+    motors = list()
 
     def configure():
         Belt.motors[0] = DRV8825(dir_pin=13, step_pin=19,
