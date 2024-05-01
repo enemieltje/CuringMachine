@@ -32,6 +32,8 @@ class Server(socketserver.ThreadingMixIn, server.HTTPServer):
     def start():
         # This creates an instance of the server class and runs it
         logger.debug('starting server...')
+        logger.debug('web port %i', Config.getWebPort())
+        logger.debug('sever port %i', Server.port)
         address = ('', Server.port)
         Server.instance = Server(address, RequestHandler)
         Server.instance.run()
