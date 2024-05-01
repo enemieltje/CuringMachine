@@ -3,6 +3,7 @@ import os
 import logging
 
 logger = logging.getLogger(__name__)
+logger.level = logging.DEBUG
 
 
 class Config():
@@ -55,7 +56,7 @@ class Config():
         logger.debug("getting value %s from config %s",
                      name, Config.currentConfig)
         default = Config.__default[section].getint(name)
-        return Config.__config[section].getint(name, default)
+        return Config.__config[section].getint(name, fallback=default)
 
 
 Config.start()
