@@ -10,12 +10,15 @@ class CuringMachine():
     # This class serves as an interface between all components of the machine
     cameras = list()
 
-    def showcase():
-        # Show that the motors are operational
-        logger.debug("showcase")
+    def startBelt():
+        logger.debug("start belt")
 
-        # Start the belt (this function only start the belt for one second for now)
         Belt.start()
+
+    def stopBelt():
+        logger.debug("start belt")
+
+        Belt.stop()
 
     def startCam():
         # TODO: Allow starting/stopping a single camera?
@@ -27,9 +30,6 @@ class CuringMachine():
         logger.debug("stop cam")
         for camera in CuringMachine.cameras:
             camera.stopStream()
-
-    def disableSteppers():
-        Belt.stop()
 
     def picture(index=0):
         # Take a picture and send the imagestream directly to the webpage

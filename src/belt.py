@@ -38,8 +38,8 @@ class Belt:
         speed = Config.getBeltSpeed()
         logger.debug("starting motor with speed %i", speed)
         motor = Belt.motors[index]
-        motor.TurnStep(Dir='forward', steps=200, stepdelay=1/speed)
-        motor.Stop()
+        motor.TurnStep(Dir='forward', steps=0, stepdelay=1/speed)
+        # motor.Stop()
 
     def stop():
         # stop each of the motors

@@ -41,9 +41,13 @@ function toggleButton() {
     previewActive = !previewActive
 }
 
-function showcaseButton() {
-    // make a request to the server to start the showcase
-    fetch('/button/showcase')
+function startBelt() {
+    // make a request to the server to start the belt
+    fetch('/button/startbelt')
+}
+function startBelt() {
+    // make a request to the server to stop the belt
+    fetch('/button/stopbelt')
 }
 
 function pictureButton() {

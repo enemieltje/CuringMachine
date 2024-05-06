@@ -1,5 +1,8 @@
 import gpiozero as GPIO
 import time
+import logging
+
+logger = logging.getLogger(__name__)
 
 # This is a library for our motor drive HAT (with the DRV8825 chip) that I imported as a file.
 
@@ -44,6 +47,8 @@ class DRV8825():
             mode_pins[2]: self.mode_3
         }
 
+        self.keepTurning = False
+
     def digital_write(self, pin, value):
         if value:
             self.control_pin[pin].on()
@@ -53,6 +58,7 @@ class DRV8825():
         # GPIO.output(pin, value)
 
     def Stop(self):
+        self.keepTurning = False
         self.digital_write(self.enable_pin, 0)
 
     def Configure_mode(self, microstep):
@@ -77,31 +83,43 @@ class DRV8825():
                      '1/16step': (0, 0, 1),
                      '1/32step': (1, 0, 1)}
 
-        print("Control mode:", mode)
+        logger.debug("Control mode:", mode)
         if (mode == ControlMode[1]):
-            print("set pins")
+            logger.debug("set pins")
             # self.digital_write(self.mode_pins, microstep[stepformat])
             self.Configure_mode(microstep[stepformat])
 
     def TurnStep(self, Dir, steps, stepdelay=0.005):
         if (Dir == MotorDir[0]):
-            print("forward")
+            logger.debug("forward")
             self.digital_write(self.enable_pin, 1)
             self.digital_write(self.dir_pin, 0)
         elif (Dir == MotorDir[1]):
-            print("backward")
+            logger.debug("backward")
             self.digital_write(self.enable_pin, 1)
             self.digital_write(self.dir_pin, 1)
         else:
-            print("the dir must be : 'forward' or 'backward'")
+            logger.warn("the dir must be : 'forward' or 'backward'")
             self.digital_write(self.enable_pin, 0)
             return
 
         if (steps == 0):
-            return
+            self.__TurnIndefinite(self, stepdelay)
 
-        print("turn step:", steps)
+        logger.debug("turn step:", steps)
         for i in range(steps):
+            self.digital_write(self.step_pin, True)
+            time.sleep(stepdelay)
+            self.digital_write(self.step_pin, False)
+            time.sleep(stepdelay)
+
+    def __TurnIndefinite(self, stepdelay=0.005):
+        if self.keepTurning:
+            logger.warn("Motor is already running")
+            return
+        self.keepTurning = True
+
+        while self.keepTurning:
             self.digital_write(self.step_pin, True)
             time.sleep(stepdelay)
             self.digital_write(self.step_pin, False)

@@ -76,8 +76,12 @@ class RequestHandler(server.SimpleHTTPRequestHandler):
         elif self.path == '/button/picture':
             self.sendStream('image/png', CuringMachine.picture())
 
-        elif self.path == '/button/showcase':
-            CuringMachine.showcase()
+        elif self.path == '/button/startbelt':
+            CuringMachine.startBelt()
+            self.redirectHome()
+
+        elif self.path == '/button/stopbelt':
+            CuringMachine.stopBelt()
             self.redirectHome()
 
         else:
