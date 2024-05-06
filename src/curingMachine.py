@@ -16,7 +16,7 @@ class CuringMachine():
         Belt.start()
 
     def stopBelt():
-        logger.debug("start belt")
+        logger.debug("stop belt")
 
         Belt.stop()
 

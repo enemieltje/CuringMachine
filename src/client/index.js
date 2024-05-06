@@ -45,7 +45,7 @@ function startBelt() {
     // make a request to the server to start the belt
     fetch('/button/startbelt')
 }
-function startBelt() {
+function stopBelt() {
     // make a request to the server to stop the belt
     fetch('/button/stopbelt')
 }
