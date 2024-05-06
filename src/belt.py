@@ -2,7 +2,7 @@ import logging
 import multiprocessing
 from config import Config
 import time
-from DRV8825 import DRV8825
+from lib.DRV8825 import DRV8825
 
 logger = logging.getLogger(__name__)
 

@@ -28,6 +28,9 @@ class CuringMachine():
         for camera in CuringMachine.cameras:
             camera.stopStream()
 
+    def disableSteppers():
+        Belt.stop()
+
     def picture(index=0):
         # Take a picture and send the imagestream directly to the webpage
         # TODO: Do this in a separate process

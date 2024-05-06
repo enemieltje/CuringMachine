@@ -14,6 +14,8 @@ python -m venv --system-site-packages ./.venv
 ./.venv/bin/pip install gpiozero            # Button input
 ./.venv/bin/pip install hx711               # Load cell
 ./.venv/bin/pip install picamera2           # Camera
+./.venv/bin/pip install python_lcd upymenu # LCD Menu
+
 
 # Start the program
 ./.venv/bin/python ./src/main.py
