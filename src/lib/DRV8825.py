@@ -104,7 +104,7 @@ class DRV8825():
             return
 
         if (steps == 0):
-            self.__TurnIndefinite(self, stepdelay)
+            self.__TurnIndefinite(stepdelay)
 
         logger.debug("turn step:", steps)
         for i in range(steps):
