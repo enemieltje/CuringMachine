@@ -1,6 +1,6 @@
 from curingMachine import CuringMachine
 from lib.esp8266_i2c_lcd import I2cLcd  # Example LCD interface used
-from upymenu import Menu, MenuAction, MenuNoop
+from lib.upymenu import Menu, MenuAction, MenuNoop
 import os
 from rpi_lcd import LCD
 import board

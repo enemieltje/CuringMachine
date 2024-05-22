@@ -120,7 +120,7 @@ class LcdApi:
         self.backlight = False
         self.hal_backlight_off()
 
-    def move_to(self, cursor_y, cursor_x):
+    def move_to(self, cursor_x, cursor_y):
         """Moves the cursor position to the indicated position. The cursor
         position is zero based (i.e. cursor_x == 0 indicates first column).
         """
@@ -153,7 +153,7 @@ class LcdApi:
             self.implied_newline = (char != '\n')
         if self.cursor_y >= self.num_lines:
             self.cursor_y = 0
-        self.move_to(self.cursor_y, self.cursor_x)
+        self.move_to(self.cursor_x, self.cursor_y)
 
     def putstr(self, string):
         """Write the indicated string to the LCD at the current cursor
@@ -172,7 +172,7 @@ class LcdApi:
         for i in range(8):
             self.hal_write_data(charmap[i])
             self.hal_sleep_us(40)
-        self.move_to(self.cursor_y, self.cursor_x)
+        self.move_to(self.cursor_x, self.cursor_y)
 
     def hal_backlight_on(self):
         """Allows the hal layer to turn the backlight on.
