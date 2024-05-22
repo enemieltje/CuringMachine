@@ -71,7 +71,7 @@ class Menu:
     def _render_options(self):
         # Render the options:
         for l, option in enumerate(self.viewport):
-            self.lcd.move_to(0, l)  # Move to the line
+            self.lcd.move_to(1, l)  # Move to the line
             # And render the longest possible string on the screen
             self.lcd.putstr(option.title[: self.columns - 1])
 
