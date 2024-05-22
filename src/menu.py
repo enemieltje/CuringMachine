@@ -23,7 +23,7 @@ class LcdMenu():
 
         beltMenu.add_option(startBelt)
         beltMenu.add_option(stopBelt)
-        LcdMenu.menu.add_option(beltMenu)
+        # LcdMenu.menu.add_option(beltMenu)
 
         camMenu = Menu("Camera")
         picture = MenuAction("Take Picture", CuringMachine.picture)
@@ -33,10 +33,19 @@ class LcdMenu():
         camMenu.add_option(picture)
         camMenu.add_option(startCam)
         camMenu.add_option(stopCam)
-        LcdMenu.menu.add_option(camMenu)
+        # LcdMenu.menu.add_option(camMenu)
 
-        ipMenu = MenuNoop(str(os.system('hostname -I')))
-        LcdMenu.menu.add_option(ipMenu)
+        mainMenu = Menu('Main Menu')
+
+        ip = str(os.system('hostname -I'))
+        logger.debug(ip)
+        ipMenu = MenuNoop(ip)
+        # LcdMenu.menu.add_option(ipMenu)
+        mainMenu.add_option(beltMenu)
+        mainMenu.add_option(camMenu)
+        mainMenu.add_option(ipMenu)
+
+        LcdMenu.menu = mainMenu
 
     def start():
         logger.debug("start")
