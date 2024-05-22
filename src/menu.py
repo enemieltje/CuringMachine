@@ -35,7 +35,7 @@ class LcdMenu():
         camMenu.add_option(stopCam)
         LcdMenu.menu.add_option(camMenu)
 
-        ipMenu = MenuNoop(os.system('hostname -I'))
+        ipMenu = MenuNoop(str(os.system('hostname -I')))
         LcdMenu.menu.add_option(ipMenu)
 
     def start():
