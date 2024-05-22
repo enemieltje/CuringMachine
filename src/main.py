@@ -34,7 +34,7 @@ if __name__ == "__main__":
     logger.info("starting")
     try:
         CuringMachine.start()
-        Server.start()
         LcdMenu.start()
+        Server.start()
     finally:
         sigterm_handler(signal.SIGTERM, 0)
