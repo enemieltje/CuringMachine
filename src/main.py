@@ -4,6 +4,7 @@ import signal
 import sys
 from belt import Belt
 from config import Config
+from input import Input
 from menu import LcdMenu
 from server import Server
 from curingMachine import CuringMachine
@@ -34,6 +35,7 @@ if __name__ == "__main__":
     logger.info("starting")
     try:
         CuringMachine.start()
+        Input.start()
         LcdMenu.start()
         Server.start()
     finally:
