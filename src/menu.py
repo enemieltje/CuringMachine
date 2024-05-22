@@ -39,7 +39,7 @@ class LcdMenu():
         ipMenu = MenuNoop(os.system('hostname -I'))
         LcdMenu.menu.add_option(ipMenu)
 
-    def start(lcd):
+    def start():
         logger.debug("start")
         lcd = LCD()
 
