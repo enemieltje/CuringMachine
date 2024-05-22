@@ -2,7 +2,12 @@
    This was tested with: https://www.wemos.cc/product/d1-mini.html"""
 
 from lib.lcd_api import LcdApi
-from time import sleep_ms
+import time
+
+
+def sleep_ms(ms):
+    time.sleep(ms/1000)
+
 
 # The PCF8574 has a jumper selectable address: 0x20 - 0x27
 DEFAULT_I2C_ADDR = 0x27
