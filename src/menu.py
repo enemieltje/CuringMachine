@@ -41,7 +41,7 @@ class LcdMenu():
 
         mainMenu.add_option(beltMenu)
         mainMenu.add_option(camMenu)
-        # mainMenu.add_option(ipMenu)
+        mainMenu.add_option(ipMenu)
 
         LcdMenu.menu = mainMenu
 
