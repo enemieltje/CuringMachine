@@ -7,12 +7,12 @@ logger = logging.getLogger(__name__)
 
 class Input():
 
-    up = Button(11, pull_up=False)
-    down = Button(26, pull_up=False)
-    left = Button(14, pull_up=False)
-    right = Button(15, pull_up=False)
-    ok = Button(23, pull_up=False)
-    power = Button(25, pull_up=False)
+    up = Button(11, pull_up=False)  # up
+    down = Button(26, pull_up=False)  # down
+    left = Button(23, pull_up=False)  # right 14
+    right = Button(14, pull_up=False)  # ok 15
+    ok = Button(15, pull_up=False)  # left 23
+    power = Button(25, pull_up=False)  # power
 
     def start():
         logger.debug("start")
