@@ -6,7 +6,7 @@ logger = logging.getLogger(__name__)
 
 
 class Input():
-    bounce_time = 0.2
+    bounce_time = 0.1
     up = Button(11, pull_up=False, bounce_time=bounce_time)
     down = Button(26, pull_up=False, bounce_time=bounce_time)
     left = Button(15, pull_up=False, bounce_time=bounce_time)
