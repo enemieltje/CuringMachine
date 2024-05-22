@@ -18,7 +18,8 @@ class LcdMenu():
     def create():
         logger.debug("create")
         beltMenu = Menu("Belt")
-        showcase = MenuAction("Showcase", CuringMachine.showcase)
+        showcase = MenuAction("Start", CuringMachine.startBelt)
+        showcase = MenuAction("Stop", CuringMachine.stopBelt)
         disableStepper = MenuAction(
             "Disable Steppers", CuringMachine.disableSteppers)
 
