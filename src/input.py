@@ -41,8 +41,7 @@ class Input():
 
     def pressOk():
         logger.debug("ok")
-        LcdMenu.menu.focus_prev()
+        LcdMenu.menu.choose()
 
     def pressPower():
         logger.debug("power")
-        LcdMenu.menu.focus_prev()

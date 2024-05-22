@@ -55,3 +55,4 @@ class LcdMenu():
 
         LcdMenu.create()
         LcdMenu.menu.start(lcd)
+        LcdMenu.menu.focus_next()
