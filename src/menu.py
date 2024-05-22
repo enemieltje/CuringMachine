@@ -38,7 +38,11 @@ class LcdMenu():
 
     def start(lcd):
         i2c = busio.I2C(board.SCL, board.SDA)
-        lcd = character_lcd.Character_LCD_I2C(i2c, 4, 20)
+        # lcd = character_lcd.Character_LCD_I2C(i2c, 4, 20)
+
+        # i2c = I2C(scl=Pin(3), sda=Pin(2), freq=400000)
+        lcd = I2cLcd(i2c, 0x27, 4, 20)
 
         LcdMenu.create()
+
         LcdMenu.menu.start(lcd)
