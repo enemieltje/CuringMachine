@@ -15,6 +15,7 @@ class Input():
     power = Button(25)
 
     def start():
+        logger.debug("start")
         Input.up.when_activated = Input.pressUp
         Input.down.when_activated = Input.pressDown
         Input.left.when_activated = Input.pressLeft
