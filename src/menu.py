@@ -35,7 +35,7 @@ class LcdMenu():
 
         mainMenu = Menu('Main Menu')
 
-        ip = "\n" + str(os.popen('hostname -I').read())
+        ip = "IP: " + str(os.popen('hostname -I').read())
         logger.debug(ip)
         ipMenu = MenuNoop(ip)
 
