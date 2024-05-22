@@ -6,13 +6,13 @@ logger = logging.getLogger(__name__)
 
 
 class Input():
-
-    up = Button(11, pull_up=False)  # up
-    down = Button(26, pull_up=False)  # down
-    left = Button(23, pull_up=False)  # right 14
-    right = Button(14, pull_up=False)  # ok 15
-    ok = Button(15, pull_up=False)  # left 23
-    power = Button(25, pull_up=False)  # power
+    bounce_time = 0.2
+    up = Button(11, pull_up=False, bounce_time=bounce_time)
+    down = Button(26, pull_up=False, bounce_time=bounce_time)
+    left = Button(23, pull_up=False, bounce_time=bounce_time)
+    right = Button(14, pull_up=False, bounce_time=bounce_time)
+    ok = Button(15, pull_up=False, bounce_time=bounce_time)
+    power = Button(25, pull_up=False, bounce_time=bounce_time)
 
     def start():
         logger.debug("start")
