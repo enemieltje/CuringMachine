@@ -33,15 +33,15 @@ class Input():
 
     def pressLeft():
         logger.debug("left")
-        LcdMenu.menu.parent()
+        LcdMenu.menu = LcdMenu.menu.parent()
 
     def pressRight():
         logger.debug("right")
-        LcdMenu.menu.choose()
+        LcdMenu.menu = LcdMenu.menu.choose()
 
     def pressOk():
         logger.debug("ok")
-        LcdMenu.menu.choose()
+        LcdMenu.menu = LcdMenu.menu.choose()
 
     def pressPower():
         logger.debug("power")
