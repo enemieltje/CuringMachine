@@ -45,6 +45,7 @@ class LcdMenu():
 
         # i2c = I2C(scl=Pin(3), sda=Pin(2), freq=400000)
         lcd = I2cLcd(i2c, 0x27, 4, 20)
+        lcd.clear()
 
         LcdMenu.create()
         LcdMenu.menu.start(lcd)
