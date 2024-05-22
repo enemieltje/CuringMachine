@@ -9,9 +9,9 @@ class Input():
     bounce_time = 0.2
     up = Button(11, pull_up=False, bounce_time=bounce_time)
     down = Button(26, pull_up=False, bounce_time=bounce_time)
-    left = Button(23, pull_up=False, bounce_time=bounce_time)
-    right = Button(14, pull_up=False, bounce_time=bounce_time)
-    ok = Button(15, pull_up=False, bounce_time=bounce_time)
+    left = Button(15, pull_up=False, bounce_time=bounce_time)
+    right = Button(23, pull_up=False, bounce_time=bounce_time)
+    ok = Button(14, pull_up=False, bounce_time=bounce_time)
     power = Button(25, pull_up=False, bounce_time=bounce_time)
 
     def start():
