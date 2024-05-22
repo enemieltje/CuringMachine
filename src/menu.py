@@ -23,7 +23,6 @@ class LcdMenu():
 
         beltMenu.add_option(startBelt)
         beltMenu.add_option(stopBelt)
-        # LcdMenu.menu.add_option(beltMenu)
 
         camMenu = Menu("Camera")
         picture = MenuAction("Take Picture", CuringMachine.picture)
@@ -33,17 +32,16 @@ class LcdMenu():
         camMenu.add_option(picture)
         camMenu.add_option(startCam)
         camMenu.add_option(stopCam)
-        # LcdMenu.menu.add_option(camMenu)
 
         mainMenu = Menu('Main Menu')
 
-        ip = str(os.system('hostname -I'))
+        ip = "\n" + str(os.system('hostname -I'))
         logger.debug(ip)
         ipMenu = MenuNoop(ip)
-        # LcdMenu.menu.add_option(ipMenu)
+
         mainMenu.add_option(beltMenu)
         mainMenu.add_option(camMenu)
-        mainMenu.add_option(ipMenu)
+        # mainMenu.add_option(ipMenu)
 
         LcdMenu.menu = mainMenu
 
@@ -52,7 +50,6 @@ class LcdMenu():
 
         i2c = busio.I2C(board.SCL, board.SDA)
 
-        # i2c = I2C(scl=Pin(3), sda=Pin(2), freq=400000)
         lcd = I2cLcd(i2c, 0x27, 4, 20)
         lcd.clear()
 
