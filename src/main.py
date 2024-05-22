@@ -20,10 +20,14 @@ def sigterm_handler(_signo, _stack_frame):
     # Gracefully stop the server when the program exits or crashes
     # This makes sure to stop the cameras and unpower the steppers
     logger.info("stopping...")
+    LcdMenu.lcd.move_to(0, 1)
+    LcdMenu.lcd.putstr("Stopping...")
     Belt.stop()
     Config.save()
     CuringMachine.stop()
     Server.stop()
+    LcdMenu.lcd.clear()
+    LcdMenu.lcd.backlight_off()
     sys.exit(0)
 
 

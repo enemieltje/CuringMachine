@@ -13,6 +13,7 @@ logger = logging.getLogger(__name__)
 
 class LcdMenu():
 
+    lcd: I2cLcd
     menu = Menu("Main Menu")
 
     def create():
@@ -50,9 +51,8 @@ class LcdMenu():
 
         i2c = busio.I2C(board.SCL, board.SDA)
 
-        lcd = I2cLcd(i2c, 0x27, 4, 20)
-        lcd.clear()
+        LcdMenu.lcd = I2cLcd(i2c, 0x27, 4, 20)
 
         LcdMenu.create()
-        LcdMenu.menu.start(lcd)
+        LcdMenu.menu.start(LcdMenu.lcd)
         LcdMenu.menu.focus_next()
