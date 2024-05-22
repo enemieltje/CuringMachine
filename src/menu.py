@@ -18,13 +18,11 @@ class LcdMenu():
     def create():
         logger.debug("create")
         beltMenu = Menu("Belt")
-        showcase = MenuAction("Start", CuringMachine.startBelt)
-        showcase = MenuAction("Stop", CuringMachine.stopBelt)
-        disableStepper = MenuAction(
-            "Disable Steppers", CuringMachine.disableSteppers)
+        startBelt = MenuAction("Start", CuringMachine.startBelt)
+        stopBelt = MenuAction("Stop", CuringMachine.stopBelt)
 
-        beltMenu.add_option(showcase)
-        beltMenu.add_option(disableStepper)
+        beltMenu.add_option(startBelt)
+        beltMenu.add_option(stopBelt)
         LcdMenu.menu.add_option(beltMenu)
 
         camMenu = Menu("Camera")
