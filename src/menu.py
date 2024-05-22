@@ -41,10 +41,10 @@ class LcdMenu():
 
     def start():
         logger.debug("start")
-        lcd = LCD()
+        # lcd = LCD()
 
-        lcd.text('Hello World!', 1)
-        # i2c = busio.I2C(board.SCL, board.SDA)
+        # lcd.text('Hello World!', 1)
+        i2c = busio.I2C(board.SCL, board.SDA)
         # lcd = character_lcd.Character_LCD_I2C(i2c, 4, 20)
 
         # i2c = I2C(scl=Pin(3), sda=Pin(2), freq=400000)
