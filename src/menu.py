@@ -2,10 +2,13 @@ from curingMachine import CuringMachine
 from lib.i2c_lcd import I2cLcd  # Example LCD interface used
 from upymenu import Menu, MenuAction, MenuNoop
 import os
-
+from rpi_lcd import LCD
 import board
 import busio
 import adafruit_character_lcd.character_lcd_i2c as character_lcd
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 class LcdMenu():
@@ -13,7 +16,7 @@ class LcdMenu():
     menu = Menu("Main Menu")
 
     def create():
-
+        logger.debug("create")
         beltMenu = Menu("Belt")
         showcase = MenuAction("Showcase", CuringMachine.showcase)
         disableStepper = MenuAction(
@@ -37,6 +40,10 @@ class LcdMenu():
         LcdMenu.menu.add_option(ipMenu)
 
     def start(lcd):
+        logger.debug("start")
+        lcd = LCD()
+
+        lcd.text('Hello World!', 1)
         # i2c = busio.I2C(board.SCL, board.SDA)
         # lcd = character_lcd.Character_LCD_I2C(i2c, 4, 20)
 
