@@ -4,6 +4,7 @@ import signal
 import sys
 from belt import Belt
 from config import Config
+from menu import LcdMenu
 from server import Server
 from curingMachine import CuringMachine
 
@@ -34,5 +35,6 @@ if __name__ == "__main__":
     try:
         CuringMachine.start()
         Server.start()
+        LcdMenu.start()
     finally:
         sigterm_handler(signal.SIGTERM, 0)
