@@ -37,7 +37,9 @@ class LcdMenu():
 
         loadMenu = Menu('Loadcell')
         print = MenuAction("print values", Loadcell.print)
+        reset = MenuAction('reset loadcell', Loadcell.reset)
         loadMenu.add_option(print)
+        loadMenu.add_option(reset)
 
         mainMenu = Menu('Main Menu')
 
