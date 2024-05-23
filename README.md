@@ -35,3 +35,19 @@ This leaves the following subsystems for this program:
 - Managing data saving
 - Managing data exporting
 - Handling sequences of output
+
+## Machine startup
+When the raspberry pi boots, it will try to run the program. This will display its current ip address and port on the lcd screen. as \[ip\]:\[port\]
+To see the logs of the program, one can connect to the raspberry via ssh. This can be done using the following command:
+ssh curing@\[ip\]
+Note that this command does not include the port displayed on the lcd screen.
+
+When connected using ssh, the program can started and stopped in the background using the following commands:
+sudo systemctl start curingmachine.service
+sudo systemctl stop curingmachine.service
+
+To see the logs and error messages of the program it needs to be started manually using the following command:
+sudo ./startCuringMachine.sh
+The program can then be interrupted using ctrl + C.
+
+Once the program is running, the website may be visited to control the machine. This can be done by typing \[ip\]:\[port\] into a browser. Adding a slash at the end may be required to stop the browser from googling the address instead of opening the site.
