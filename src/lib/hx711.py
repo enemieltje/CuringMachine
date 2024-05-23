@@ -256,8 +256,6 @@ class HX711(object):
             # and stop when defined maximum is reached
             if ready_counter >= max_tries:
                 logger.warn('self._read() not ready after 40 trials\n')
-                return False
-                break
 
         data_in = 0  # 2's complement data from hx 711
         # read first 24 bits of data
@@ -328,7 +326,7 @@ class HX711(object):
 
         data_list = []
         for i in range(times):
-            logger.debug(f'raw data {len(data_list)}/{times}')
+            logger.debug(f'raw data {i}/{times}')
             data = self._read()
             if data not in [False, -1]:
                 data_list.append(data)
