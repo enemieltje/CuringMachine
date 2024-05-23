@@ -1,6 +1,7 @@
 import time
 import logging
-from gpiozero import Button, LED
+from gpiozero import DigitalInputDevice, DigitalOutputDevice
+
 
 logger = logging.getLogger(__name__)
 
@@ -43,17 +44,18 @@ class HX711(object):
         """
         if (isinstance(dout_pin, int) and
                 isinstance(pd_sck_pin, int)):  # just check of it is integer
-            self._pd_sck = pd_sck_pin  # init pd_sck pin number
-            self._dout = dout_pin  # init data pin number
+            self._pd_sck = DigitalOutputDevice(
+                pd_sck_pin)  # init pd_sck pin number
+            self._dout = DigitalInputDevice(dout_pin)  # init data pin number
         else:
             raise TypeError('dout_pin and pd_sck_pin have to be integer numbers.\nI have got dout_pin: '
                             + str(dout_pin) +
                             ' and pd_sck_pin: ' + str(pd_sck_pin) + '\n')
 
         # set pin mode to BCM numbering (GPIO numbers, not board pins)
-        GPIO.setmode(GPIO.BCM)
-        GPIO.setup(self._pd_sck, GPIO.OUT)  # pin _pd_sck is output only
-        GPIO.setup(self._dout, GPIO.IN)  # pin _dout is input only
+        # GPIO.setmode(GPIO.BCM)
+        # GPIO.setup(self._pd_sck, GPIO.OUT)  # pin _pd_sck is output only
+        # GPIO.setup(self._dout, GPIO.IN)  # pin _dout is input only
         self.channel = channel
         self.channel_a_gain = gain
 
@@ -90,8 +92,10 @@ class HX711(object):
         :return: always True
         :rtype bool
         """
-        GPIO.output(self._pd_sck, False)
-        GPIO.output(self._pd_sck, True)
+        # GPIO.output(self._pd_sck, False)
+        # GPIO.output(self._pd_sck, True)
+        self._pd_sck.off()
+        self._pd_sck.on()
         time.sleep(0.01)
         return True
 
@@ -102,7 +106,8 @@ class HX711(object):
         :return: always True
         :rtype bool
         """
-        GPIO.output(self._pd_sck, False)
+        # GPIO.output(self._pd_sck, False)
+        self._pd_sck.off()
         time.sleep(0.01)
         return True
 
@@ -180,7 +185,8 @@ class HX711(object):
         :rtype bool
         """
 
-        _is_ready = GPIO.input(self._dout) == 0
+        # _is_ready = GPIO.input(self._dout) == 0
+        _is_ready = self._dout.is_active == False
         logging.debug("check data ready for reading: {result}".format(
             result="YES" if _is_ready is True else "NO"
         ))
@@ -205,8 +211,10 @@ class HX711(object):
         for _ in range(num):
             logging.debug("_set_channel_gain called")
             start_counter = time.perf_counter()  # start timer now.
-            GPIO.output(self._pd_sck, True)  # set high
-            GPIO.output(self._pd_sck, False)  # set low
+            # GPIO.output(self._pd_sck, True)  # set high
+            # GPIO.output(self._pd_sck, False)  # set low
+            self._pd_sck.on()
+            self._pd_sck.off()
             end_counter = time.perf_counter()  # stop timer
             time_elapsed = float(end_counter - start_counter)
             # check if HX711 did not turn off...
@@ -234,7 +242,8 @@ class HX711(object):
         :rtype: int
         """
         # start by pulling the clock line low
-        GPIO.output(self._pd_sck, False)
+        # GPIO.output(self._pd_sck, False)
+        self._pd_sck.off()
         # init the counter
         ready_counter = 0
 
@@ -255,8 +264,10 @@ class HX711(object):
             # start timer
             start_counter = time.perf_counter()
             # request next bit from HX711
-            GPIO.output(self._pd_sck, True)
-            GPIO.output(self._pd_sck, False)
+            # GPIO.output(self._pd_sck, True)
+            # GPIO.output(self._pd_sck, False)
+            self._pd_sck.on()
+            self._pd_sck.off()
             # stop timer
             end_counter = time.perf_counter()
             time_elapsed = float(end_counter - start_counter)
@@ -270,7 +281,7 @@ class HX711(object):
 
             # Shift the bits in to data_in variable.
             # Left shift by one bit then bitwise OR with the new bit.
-            data_in = (data_in << 1) | GPIO.input(self._dout)
+            data_in = (data_in << 1) | self._dout.is_active
 
         if self.channel == 'A' and self.channel_a_gain == 128:
             self._set_channel_gain(num=1)  # send one bit
