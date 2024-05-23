@@ -8,6 +8,7 @@ logger = logging.getLogger(__name__)
 class Loadcell():
 
     def start():
+        logger.debug('Start')
         # Loadcell.hx = HX711(5, 6)
         Loadcell.hx = HX711(dout_pin=5, pd_sck_pin=6, gain=128, channel='A')
         Loadcell.reset()
@@ -21,6 +22,7 @@ class Loadcell():
             logger.warn('not ready')
 
     def print():
+        logger.debug('Print')
         data = Loadcell.hx.get_raw_data(5)
 
         if data != False:  # always check if you get correct value or only False
