@@ -2,6 +2,8 @@
 import logging
 import signal
 import sys
+from gpiozero import close
+from loadcell import Loadcell
 from belt import Belt
 from config import Config
 from input import Input
@@ -25,9 +27,10 @@ def sigterm_handler(_signo, _stack_frame):
     Belt.stop()
     Config.save()
     CuringMachine.stop()
-    Server.stop()
     LcdMenu.lcd.clear()
     LcdMenu.lcd.backlight_off()
+    close()
+    Server.stop()
     sys.exit(0)
 
 
@@ -39,6 +42,7 @@ if __name__ == "__main__":
     logger.info("starting")
     try:
         CuringMachine.start()
+        Loadcell.start()
         Input.start()
         LcdMenu.start()
         Server.start()

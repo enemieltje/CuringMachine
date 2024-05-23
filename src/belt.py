@@ -33,12 +33,13 @@ class Belt:
         process1.start()
         process2.start()
 
-    def startMotor(index):
+    def startMotor(index=0):
         # start turning a single motor
         speed = Config.getBeltSpeed()
+        direction = Config.getBeltDirection()
         logger.debug("starting motor with speed %i", speed)
         motor = Belt.motors[index]
-        motor.TurnStep(Dir='forward', steps=0, stepdelay=1/speed)
+        motor.TurnStep(Dir=direction, steps=0, stepdelay=1/speed)
         # motor.Stop()
 
     def stop():

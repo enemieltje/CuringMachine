@@ -38,7 +38,16 @@ class Config():
         Config.__config.write(Config.currentConfig)
 
     def getBeltSpeed() -> int:
-        return Config.__getint('Parameters', 'beltSpeed')
+        return Config.__getint('Belt', 'speed')
+
+    def setBeltSpeed(speed):
+        Config.__config['Belt']['speed'] = speed
+
+    def getBeltDirection() -> int:
+        return Config.__getint('Belt', 'direction')
+
+    def setBeltDirection(direction):
+        Config.__config['Belt', 'direction'] = direction
 
     def getWebPort() -> int:
         logger.debug('getting web port')
@@ -50,7 +59,8 @@ class Config():
         Config.__default['Metadata'] = {'version': '0'}
         Config.__default['WebConfig'] = {'port': '8080',
                                          'address': ''}
-        Config.__default['Parameters'] = {'beltSpeed': '200'}
+        Config.__default['Belt'] = {'speed': '200',
+                                    'direction': 'forward'}
         logger.debug(Config.__default)
 
     def __loadDefault():

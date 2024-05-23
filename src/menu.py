@@ -2,11 +2,12 @@ from curingMachine import CuringMachine
 from lib.esp8266_i2c_lcd import I2cLcd  # Example LCD interface used
 from lib.upymenu import Menu, MenuAction, MenuNoop
 import os
-from rpi_lcd import LCD
 import board
 import busio
 import adafruit_character_lcd.character_lcd_i2c as character_lcd
 import logging
+
+from loadcell import Loadcell
 
 logger = logging.getLogger(__name__)
 
@@ -34,6 +35,10 @@ class LcdMenu():
         camMenu.add_option(startCam)
         camMenu.add_option(stopCam)
 
+        loadMenu = Menu('Loadcell')
+        print = MenuAction("print values", Loadcell.print)
+        loadMenu.add_option(print)
+
         mainMenu = Menu('Main Menu')
 
         ip = "IP: " + str(os.popen('hostname -I').read())
@@ -42,6 +47,7 @@ class LcdMenu():
 
         mainMenu.add_option(beltMenu)
         mainMenu.add_option(camMenu)
+        mainMenu.add_option(loadMenu)
         mainMenu.add_option(ipMenu)
 
         LcdMenu.menu = mainMenu
