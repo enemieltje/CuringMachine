@@ -255,7 +255,7 @@ class HX711(object):
             # check loop count
             # and stop when defined maximum is reached
             if ready_counter >= max_tries:
-                logger.debug('self._read() not ready after 40 trials\n')
+                logger.warn('self._read() not ready after 40 trials\n')
                 return False
                 break
 
@@ -314,6 +314,7 @@ class HX711(object):
         return signed_data
 
     def get_raw_data(self, times=5):
+        logger.debug(f'getting {times} raw data')
         """
         do some readings and aggregate them using the defined statistics function
 
@@ -326,7 +327,8 @@ class HX711(object):
         self._validate_measure_count(times)
 
         data_list = []
-        while len(data_list) < times:
+        for i in range(times):
+            logger.debug(f'raw data {len(data_list)}/{times}')
             data = self._read()
             if data not in [False, -1]:
                 data_list.append(data)
