@@ -56,7 +56,7 @@ class Config():
     def __createDefault():
         logger.debug('loading default')
         Config.__default = configparser.ConfigParser()
-        Config.__default['Metadata'] = {'version': '0'}
+        Config.__default['Metadata'] = {'version': '1'}
         Config.__default['WebConfig'] = {'port': '8080',
                                          'address': ''}
         Config.__default['Belt'] = {'speed': '200',
