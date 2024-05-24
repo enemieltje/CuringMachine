@@ -36,7 +36,8 @@ class Belt:
     def startMotor(index=0):
         # start turning a single motor
         speed = Config.getBeltSpeed()
-        direction = Config.getBeltDirection()
+        # direction = Config.getBeltDirection()
+        direction = 'forward'
         logger.debug("starting motor with speed %i", speed)
         motor = Belt.motors[index]
         motor.TurnStep(Dir=direction, steps=0, stepdelay=1/speed)
