@@ -11,12 +11,12 @@ logger = logging.getLogger(__name__)
 class Server(socketserver.ThreadingMixIn, server.HTTPServer):
     # A simple HTTP server allowing IO over a webpage
 
-    port = Config.getWebPort()
     instance: any
     allow_reuse_address = True
     daemon_threads = True
 
     def __init__(self, address, requestHandler):
+        self.port = Config.getWebPort()
         super().__init__(address, requestHandler)
 
     def run(self):
