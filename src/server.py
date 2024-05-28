@@ -16,7 +16,6 @@ class Server(socketserver.ThreadingMixIn, server.HTTPServer):
     daemon_threads = True
 
     def __init__(self, address, requestHandler):
-        self.port = Config.getWebPort()
         super().__init__(address, requestHandler)
 
     def run(self):
@@ -30,6 +29,7 @@ class Server(socketserver.ThreadingMixIn, server.HTTPServer):
             logger.info("Stream stopped.")
 
     def start():
+        Server.port = Config.getWebPort()
         # This creates an instance of the server class and runs it
         logger.debug('starting server...')
         logger.debug('sever port %i', Server.port)
