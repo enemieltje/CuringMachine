@@ -136,6 +136,74 @@ class MenuAction:
         return self.callback()
 
 
+class MenuValue:
+    def __init__(self, title, getter, setter):
+        self.title = title
+        self.getter = getter
+        self.setter = setter
+
+        self.value = None
+        self.lcd = None
+        self.parent_menu = None
+
+        self.active = False
+
+    # Starts the menu, used at root level to start the interface.
+    # Or when navigating to a submenu or parten
+    def start(self, lcd):
+        self.lcd = lcd  # Assign the LCD to the menu.
+        self.columns = lcd.num_columns  # Get the columns of the LCD
+        self.lines = lcd.num_lines  # And the line
+        self.active = True  # Set the screen as active
+        self.value = self.getter()
+
+        # Chunk the list and calculate the viewport:
+        self.render()
+        return self
+
+    # Renders the menu, also when refreshing (when changing select)
+    def render(self):
+        logger.debug(self.lines)
+        logger.debug(self.focus)
+        logger.debug(self.options)
+        # We only render the active screen, not the others
+        if not self.active or not self.options_chunked:
+            return
+
+        self.lcd.clear()
+        self.lcd.move_to(0, 0)
+
+        self._render_value()
+
+    def choose(self):
+        self.setter(self.value)
+        self.parent()
+
+    def parent(self):
+        if self.parent_menu:
+            self.active = False
+            return self.parent_menu.start(self.lcd)
+
+    def _render_value(self):
+        self.lcd.move_to(0, 0)
+        self.lcd.putstr(self.title)
+        self.lcd.move_to(0, 2)
+        display_value = self.value.rjust(self.columns / 2, " ")
+        self.lcd.putstr(display_value)
+
+        self.lcd.move_to(0, 3)
+        self.lcd.putstr("<-Cancel   Confirm->")
+
+    def modify_value(self, amount):
+        self.value = self.value + amount
+
+    def focus_prev(self):
+        self.modify_value(1)
+
+    def focus_next(self):
+        self.modify_value(-1)
+
+
 class MenuNoop:
     def __init__(self, title):
         self.title = title

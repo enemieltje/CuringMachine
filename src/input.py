@@ -1,6 +1,8 @@
 from gpiozero import Button
+import time
 import logging
 from menu import LcdMenu
+from lib.upymenu import Menu, MenuAction, MenuNoop, MenuValue
 
 logger = logging.getLogger(__name__)
 
@@ -23,6 +25,18 @@ class Input():
         Input.ok.when_activated = Input.pressOk
         Input.power.when_activated = Input.pressPower
 
+    def holdUp():
+        logger.debug("hold up")
+        while Input.up.is_active:
+            LcdMenu.menu.focus_prev()
+            time.wait(0.1)
+
+    def holdDown():
+        logger.debug("hold down")
+        while Input.down.is_active:
+            LcdMenu.menu.focus_next()
+            time.wait(0.1)
+
     def pressUp():
         logger.debug("up")
         LcdMenu.menu.focus_prev()
@@ -41,6 +55,7 @@ class Input():
 
     def pressOk():
         logger.debug("ok")
+        LcdMenu.menu.save()
         LcdMenu.menu = LcdMenu.menu.choose()
 
     def pressPower():

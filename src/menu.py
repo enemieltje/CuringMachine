@@ -1,6 +1,7 @@
+from config import Config
 from curingMachine import CuringMachine
 from lib.esp8266_i2c_lcd import I2cLcd  # Example LCD interface used
-from lib.upymenu import Menu, MenuAction, MenuNoop
+from lib.upymenu import Menu, MenuAction, MenuNoop, MenuValue
 import os
 import board
 import busio
@@ -22,9 +23,12 @@ class LcdMenu():
         beltMenu = Menu("Belt")
         startBelt = MenuAction("Start", CuringMachine.startBelt)
         stopBelt = MenuAction("Stop", CuringMachine.stopBelt)
+        beltSpeed = MenuValue(
+            "Set Belt Speed", Config.getBeltSpeed, Config.setBeltSpeed)
 
         beltMenu.add_option(startBelt)
         beltMenu.add_option(stopBelt)
+        beltMenu.add_option(beltSpeed)
 
         camMenu = Menu("Camera")
         picture = MenuAction("Take Picture", CuringMachine.picture)
@@ -43,7 +47,7 @@ class LcdMenu():
 
         mainMenu = Menu('Main Menu')
 
-        ip = str(os.popen('hostname -I').read()) + ":8080"
+        ip = str(os.popen('hostname -I').read())
         logger.debug(ip)
         ipMenu = MenuNoop(ip)
 
