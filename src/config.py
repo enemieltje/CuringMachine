@@ -79,6 +79,3 @@ class Config():
             return Config.__config[section].getint(name, fallback=default)
         else:
             return default
-
-
-Config.start()

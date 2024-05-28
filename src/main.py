@@ -39,6 +39,7 @@ if __name__ == "__main__":
     # Start the server and add the camera(s)
     logger.info("starting")
     try:
+        Config.start()
         CuringMachine.start()
         Loadcell.start()
         Input.start()
