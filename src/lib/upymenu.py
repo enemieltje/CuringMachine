@@ -163,7 +163,7 @@ class MenuValue:
     # Renders the menu, also when refreshing (when changing select)
     def render(self):
         # We only render the active screen, not the others
-        if not self.active or not self.options_chunked:
+        if not self.active:
             return
 
         self.lcd.clear()
