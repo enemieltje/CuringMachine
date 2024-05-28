@@ -109,6 +109,8 @@ class Menu:
 
         if type(chosen_option) == Menu:
             return self._choose_menu(chosen_option)
+        elif type(chosen_option) == MenuValue:
+            return self._choose_menu(chosen_option)
         elif type(chosen_option) == MenuAction:
             chosen_option.cb()  # Execute the callback function
             return self
