@@ -41,7 +41,9 @@ class Config():
         return Config.__getint('Belt', 'speed')
 
     def setBeltSpeed(speed):
-        Config.__config['Belt']['speed'] = speed
+        if Config.__config.has_section('Belt'):
+            logger.warn('config does not contain a Belt section')
+        Config.__config['Belt']['speed'] = int(speed)
 
     def getBeltDirection() -> int:
         return Config.__getint('Belt', 'direction')

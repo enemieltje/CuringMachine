@@ -19,7 +19,9 @@ class Input():
     def start():
         logger.debug("start")
         Input.up.when_activated = Input.pressUp
+        Input.up.when_held = Input.holdUp
         Input.down.when_activated = Input.pressDown
+        Input.down.when_held = Input.holdDown
         Input.left.when_activated = Input.pressLeft
         Input.right.when_activated = Input.pressRight
         Input.ok.when_activated = Input.pressOk
