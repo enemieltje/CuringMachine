@@ -14,6 +14,7 @@ class Config():
     def start():
         logger.debug('starting config')
         Config.__createDefault()
+        Config.open()
 
     def open(name="default.ini"):
         logger.debug('opening ' + name)
@@ -21,12 +22,14 @@ class Config():
         Config.currentConfig = name
         path = Config.configFolder + name
         if os.path.exists(path):
+            logger.info('opening config' + name)
             Config.__config.read(path)
             if not (Config.__getint('Metadata', 'Version') == '0'):
                 logger.warn("Config %s is outdated!", name)
                 Config.__loadDefault()
                 Config.currentConfig = ''
         else:
+            logger.info('no config exists, opening default')
             Config.__loadDefault()
             Config.save()
 
@@ -35,7 +38,7 @@ class Config():
             logger.debug("Attempting to save default config")
             return
         logger.info("Saving config: " + Config.currentConfig)
-        Config.__config.write(Config.currentConfig)
+        Config.__config.write(Config.configFolder + Config.currentConfig)
 
     def getBeltSpeed() -> int:
         return Config.__getint('Belt', 'speed')
