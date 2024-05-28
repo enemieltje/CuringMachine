@@ -38,7 +38,9 @@ class Config():
             logger.debug("Attempting to save default config")
             return
         logger.info("Saving config: " + Config.currentConfig)
-        Config.__config.write(Config.configFolder + Config.currentConfig)
+
+        with open(Config.configFolder + Config.currentConfig, 'w') as configfile:
+            Config.__config.write(configfile)
 
     def getBeltSpeed() -> int:
         return Config.__getint('Belt', 'speed')
