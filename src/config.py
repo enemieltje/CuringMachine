@@ -22,7 +22,7 @@ class Config():
         Config.currentConfig = name
         path = Config.configFolder + name
         if os.path.exists(path):
-            logger.info('opening config' + name)
+            logger.info('opening config ' + name)
             Config.__config.read(path)
             if not (Config.__getint('Metadata', 'Version') == '0'):
                 logger.warn("Config %s is outdated!", name)
