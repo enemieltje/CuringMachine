@@ -191,7 +191,7 @@ class MenuValue:
     def _render_value(self):
         self.lcd.move_to(0, 2)
         display_value = str(self.value)
-        display_value = display_value.rjust(self.columns / 2, " ")
+        display_value = display_value.rjust(10, " ")
         self.lcd.putstr(display_value)
 
     def modify_value(self, amount):
