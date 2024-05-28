@@ -33,15 +33,15 @@ class Input():
             LcdMenu.menu.focus_prev()
             time.sleep(0.1)
 
+    def pressUp():
+        logger.debug("up")
+        LcdMenu.menu.focus_prev()
+
     def holdDown():
         logger.debug("hold down")
         while Input.down.is_active:
             LcdMenu.menu.focus_next()
-            time.wait(0.1)
-
-    def pressUp():
-        logger.debug("up")
-        LcdMenu.menu.focus_prev()
+            time.sleep(0.1)
 
     def pressDown():
         logger.debug("down")
