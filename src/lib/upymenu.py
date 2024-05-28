@@ -77,7 +77,7 @@ class Menu:
 
     # Add an option to the menu (could be an action or submenu)
     def add_option(self, option):
-        if type(option) not in [Menu, MenuAction, MenuNoop]:
+        if type(option) not in [Menu, MenuAction, MenuNoop, MenuValue]:
             raise Exception(
                 "Cannot add option to menu (required Menu, MenuAction or MenuNoop)"
             )
