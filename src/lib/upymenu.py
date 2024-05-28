@@ -43,9 +43,6 @@ class Menu:
 
     # Renders the menu, also when refreshing (when changing select)
     def render(self):
-        logger.debug(self.lines)
-        logger.debug(self.focus)
-        logger.debug(self.options)
         # We only render the active screen, not the others
         if not self.active or not self.options_chunked:
             return
@@ -165,9 +162,6 @@ class MenuValue:
 
     # Renders the menu, also when refreshing (when changing select)
     def render(self):
-        logger.debug(self.lines)
-        logger.debug(self.focus)
-        logger.debug(self.options)
         # We only render the active screen, not the others
         if not self.active or not self.options_chunked:
             return
@@ -175,6 +169,7 @@ class MenuValue:
         self.lcd.clear()
         self.lcd.move_to(0, 0)
 
+        self._render_context()
         self._render_value()
 
     def choose(self):
@@ -186,18 +181,21 @@ class MenuValue:
             self.active = False
             return self.parent_menu.start(self.lcd)
 
-    def _render_value(self):
+    def _render_context(self):
         self.lcd.move_to(0, 0)
         self.lcd.putstr(self.title)
-        self.lcd.move_to(0, 2)
-        display_value = self.value.rjust(self.columns / 2, " ")
-        self.lcd.putstr(display_value)
 
         self.lcd.move_to(0, 3)
         self.lcd.putstr("<-Cancel   Confirm->")
 
+    def _render_value(self):
+        self.lcd.move_to(0, 2)
+        display_value = self.value.rjust(self.columns / 2, " ")
+        self.lcd.putstr(display_value)
+
     def modify_value(self, amount):
         self.value = self.value + amount
+        self._render_value()
 
     def focus_prev(self):
         self.modify_value(1)
