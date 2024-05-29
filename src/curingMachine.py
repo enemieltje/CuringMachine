@@ -60,7 +60,6 @@ class CuringMachine():
             camera.stopStream()
         Belt.stop()
         Config.save()
-        Server.stop()
 
         # LcdMenu.turnOff()
         sys.exit(0)

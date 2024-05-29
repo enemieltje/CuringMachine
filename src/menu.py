@@ -2,7 +2,7 @@ import signal
 import sys
 from config import Config
 from curingMachine import CuringMachine
-from lib.esp8266_i2c_lcd import I2cLcd  # Example LCD interface used
+from lib.esp8266_i2c_lcd import I2cLcd
 from lib.upymenu import Menu, MenuAction, MenuNoop, MenuValue
 import os
 import board
@@ -11,6 +11,7 @@ import adafruit_character_lcd.character_lcd_i2c as character_lcd
 import logging
 
 from loadcell import Loadcell
+from server import Server
 
 logger = logging.getLogger(__name__)
 
@@ -18,6 +19,7 @@ logger = logging.getLogger(__name__)
 def exit():
     LcdMenu.stop()
     CuringMachine.stop()
+    Server.stop()
     LcdMenu.turnOff()
 
 

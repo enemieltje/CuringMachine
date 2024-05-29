@@ -23,6 +23,7 @@ def sigterm_handler(_signo, _stack_frame):
     logger.info("stopping...")
     LcdMenu.stop()
     CuringMachine.stop()
+    Server.stop()
     LcdMenu.turnOff()
 
 
