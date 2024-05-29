@@ -16,7 +16,9 @@ logger = logging.getLogger(__name__)
 
 
 def exit():
-    signal.raise_signal(signal.SIGTERM)
+    LcdMenu.stop()
+    CuringMachine.stop()
+    LcdMenu.turnOff()
 
 
 class LcdMenu():
@@ -76,3 +78,11 @@ class LcdMenu():
         LcdMenu.create()
         LcdMenu.menu.start(LcdMenu.lcd)
         LcdMenu.menu.focus_next()
+
+    def stop():
+        LcdMenu.lcd.move_to(0, 1)
+        LcdMenu.lcd.putstr("Stopping...")
+
+    def turnOff():
+        LcdMenu.lcd.clear()
+        LcdMenu.lcd.backlight_off()

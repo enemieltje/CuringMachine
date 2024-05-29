@@ -4,7 +4,6 @@ import sys
 from belt import Belt
 from camera import Camera
 from config import Config
-from input import Input
 from loadcell import Loadcell
 from menu import LcdMenu
 from server import Server
@@ -51,19 +50,13 @@ class CuringMachine():
     def start():
         # add all the cameras and start the web server
         logger.debug('starting curing machine')
-        Config.start()
         CuringMachine.addCamera(Camera())
-        Loadcell.start()
-        Input.start()
-        LcdMenu.start()
-        Server.start()
 
     def stop():
         # Gracefully stop the server when the program exits or crashes
         # This makes sure to stop the cameras and unpower the steppers
         logger.info("stopping...")
-        LcdMenu.lcd.move_to(0, 1)
-        LcdMenu.lcd.putstr("Stopping...")
+        # LcdMenu.stop()
 
         for camera in CuringMachine.cameras:
             camera.stopStream()
@@ -71,6 +64,5 @@ class CuringMachine():
         Config.save()
         Server.stop()
 
-        LcdMenu.lcd.clear()
-        LcdMenu.lcd.backlight_off()
+        # LcdMenu.turnOff()
         sys.exit(0)
