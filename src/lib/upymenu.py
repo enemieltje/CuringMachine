@@ -275,9 +275,12 @@ class MenuDisplayValue:
         self.lcd.putstr(display_value)
 
     def _render_process(self):
+        logger.debug(self.active)
         while self.active:
+            logger.debug('render process loop')
             self._render_value()
             time.sleep(0.5)
+        logger.debug('process no longer active')
 
     def modify_value(self, amount):
         self.value = self.value + amount
