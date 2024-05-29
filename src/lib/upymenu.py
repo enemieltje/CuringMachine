@@ -219,11 +219,10 @@ class MenuDisplayValue:
         self.value = None
         self.lcd = None
         self.parent_menu = None
+        self.process = None
 
         self.active = False
         self.parent_conn, self.child_conn = multiprocessing.Pipe()
-        self.process = multiprocessing.Process(
-            target=self._render_process)
 
     # Starts the menu, used at root level to start the interface.
     # Or when navigating to a submenu or parten
@@ -250,6 +249,8 @@ class MenuDisplayValue:
         self._render_context()
         self._render_value()
 
+        self.process = multiprocessing.Process(
+            target=self._render_process)
         self.parent_conn.send(True)
         self.process.start()
 
