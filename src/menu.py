@@ -1,3 +1,4 @@
+import sys
 from config import Config
 from curingMachine import CuringMachine
 from lib.esp8266_i2c_lcd import I2cLcd  # Example LCD interface used
@@ -50,11 +51,13 @@ class LcdMenu():
         ip = str(os.popen('hostname -I').read())
         logger.debug(ip)
         ipMenu = MenuNoop(ip)
+        exitMenu = MenuAction("Exit", sys.exit)
 
         mainMenu.add_option(beltMenu)
         mainMenu.add_option(camMenu)
         mainMenu.add_option(loadMenu)
         mainMenu.add_option(ipMenu)
+        mainMenu.add_option(exitMenu)
 
         LcdMenu.menu = mainMenu
 
