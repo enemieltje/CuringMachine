@@ -283,7 +283,7 @@ class MenuDisplayValue:
             self.value = self.getter()
             self._render_value()
             time.sleep(0.5)
-            logger.debug('active: ' + self.active)
+            logger.debug('active: ' + str(self.active))
         logger.debug('process no longer active')
 
     def modify_value(self, amount):
