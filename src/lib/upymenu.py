@@ -221,6 +221,8 @@ class MenuDisplayValue:
         self.parent_menu = None
 
         self.active = False
+        self.process = multiprocessing.Process(
+            target=self._render_process)
 
     # Starts the menu, used at root level to start the interface.
     # Or when navigating to a submenu or parten
@@ -247,9 +249,7 @@ class MenuDisplayValue:
         self._render_context()
         self._render_value()
 
-        process = multiprocessing.Process(
-            target=self._render_process)
-        process.start()
+        self.process.start()
 
     def choose(self):
         return self.parent()
@@ -258,6 +258,7 @@ class MenuDisplayValue:
         if self.parent_menu:
             self.active = False
             return self.parent_menu.start(self.lcd)
+        self.process.terminate()
         logger.warn('No Parent window')
         return self
 
@@ -278,6 +279,7 @@ class MenuDisplayValue:
         logger.debug(self.active)
         while self.active:
             logger.debug('render process loop')
+            self.value = self.getter()
             self._render_value()
             time.sleep(0.5)
         logger.debug('process no longer active')
