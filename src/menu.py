@@ -1,3 +1,4 @@
+import signal
 import sys
 from config import Config
 from curingMachine import CuringMachine
@@ -12,6 +13,10 @@ import logging
 from loadcell import Loadcell
 
 logger = logging.getLogger(__name__)
+
+
+def exit():
+    signal.raise_signal(signal.SIGTERM)
 
 
 class LcdMenu():
@@ -51,7 +56,7 @@ class LcdMenu():
         ip = str(os.popen('hostname -I').read())
         logger.debug(ip)
         ipMenu = MenuNoop(ip)
-        exitMenu = MenuAction("Exit", sys.exit)
+        exitMenu = MenuAction("Exit", exit)
 
         mainMenu.add_option(beltMenu)
         mainMenu.add_option(camMenu)
