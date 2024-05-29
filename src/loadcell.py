@@ -35,8 +35,7 @@ class Loadcell():
         logger.debug('Read')
         data = Loadcell.hx.get_raw_data()
 
-        if data != False:
+        if data != False and len(data) < 1:
             return statistics.mean(data)
-        else:
-            logger.warn('invalid data')
-            return
+
+        logger.warn('invalid data')
