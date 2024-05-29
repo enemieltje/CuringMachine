@@ -34,6 +34,7 @@ class Loadcell():
     def read():
         logger.debug('Read')
         data = Loadcell.hx.get_raw_data()
+        logger.debug(data)
 
         if data != False and len(data) < 1:
             return statistics.mean(data)
