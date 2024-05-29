@@ -255,11 +255,11 @@ class MenuDisplayValue:
         return self.parent()
 
     def parent(self):
+        self.process.terminate()
         if self.parent_menu:
             logger.debug('Switching to parent window')
             self.active = False
             return self.parent_menu.start(self.lcd)
-        self.process.terminate()
         logger.warn('No Parent window')
         return self
 
