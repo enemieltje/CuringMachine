@@ -25,6 +25,7 @@ def sigterm_handler(_signo, _stack_frame):
     CuringMachine.stop()
     Server.stop()
     LcdMenu.turnOff()
+    sys.exit(0)
 
 
 if __name__ == "__main__":

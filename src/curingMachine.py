@@ -61,4 +61,3 @@ class CuringMachine():
         Config.save()
 
         # LcdMenu.turnOff()
-        sys.exit(0)

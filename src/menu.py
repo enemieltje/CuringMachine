@@ -21,6 +21,7 @@ def exit():
     CuringMachine.stop()
     Server.stop()
     LcdMenu.turnOff()
+    sys.exit(0)
 
 
 class LcdMenu():
