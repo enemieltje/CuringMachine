@@ -258,6 +258,8 @@ class MenuDisplayValue:
 
     def parent(self):
         self.parent_conn.send(False)
+        time.sleep(0.5)
+        self.process.close()
         # self.process.terminate()
         if self.parent_menu:
             logger.debug('Switching to parent window')
@@ -287,7 +289,8 @@ class MenuDisplayValue:
             self.value = self.getter()
             self._render_value()
             time.sleep(0.5)
-            recv = self.child_conn.recv()
+            if self.child_conn.poll():
+                recv = self.child_conn.recv()
             logger.debug('recv: ' + str(recv))
         logger.debug('process no longer active')
 
