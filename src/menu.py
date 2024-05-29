@@ -3,7 +3,7 @@ import sys
 from config import Config
 from curingMachine import CuringMachine
 from lib.esp8266_i2c_lcd import I2cLcd
-from lib.upymenu import Menu, MenuAction, MenuNoop, MenuValue
+from lib.upymenu import Menu, MenuAction, MenuDisplayValue, MenuNoop, MenuValue
 import os
 import board
 import busio
@@ -53,8 +53,10 @@ class LcdMenu():
         loadMenu = Menu('Loadcell')
         print = MenuAction("print values", Loadcell.print)
         reset = MenuAction('reset loadcell', Loadcell.reset)
+        show = MenuDisplayValue('read loadcell', Loadcell.read)
         loadMenu.add_option(print)
         loadMenu.add_option(reset)
+        loadMenu.add_option(show)
 
         mainMenu = Menu('Main Menu')
 

@@ -28,4 +28,14 @@ class Loadcell():
         if data != False:  # always check if you get correct value or only False
             logger.info('Raw data: ' + str(data))
         else:
-            logger.info('invalid data')
+            logger.warn('invalid data')
+
+    def read():
+        logger.debug('Read')
+        data = Loadcell.hx.get_raw_data(1)
+
+        if data != False:
+            return data
+        else:
+            logger.warn('invalid data')
+            return

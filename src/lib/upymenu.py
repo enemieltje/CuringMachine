@@ -1,5 +1,7 @@
 import math
 import logging
+import multiprocessing
+import time
 
 logger = logging.getLogger(__name__)
 
@@ -74,7 +76,7 @@ class Menu:
 
     # Add an option to the menu (could be an action or submenu)
     def add_option(self, option):
-        if type(option) not in [Menu, MenuAction, MenuNoop, MenuValue]:
+        if type(option) not in [Menu, MenuAction, MenuNoop, MenuDisplayValue, MenuValue]:
             raise Exception(
                 "Cannot add option to menu (required Menu, MenuAction or MenuNoop)"
             )
@@ -107,6 +109,8 @@ class Menu:
         if type(chosen_option) == Menu:
             return self._choose_menu(chosen_option)
         elif type(chosen_option) == MenuValue:
+            return self._choose_menu(chosen_option)
+        elif type(chosen_option) == MenuDisplayValue:
             return self._choose_menu(chosen_option)
         elif type(chosen_option) == MenuAction:
             chosen_option.cb()  # Execute the callback function
@@ -195,6 +199,85 @@ class MenuValue:
         display_value = str(self.value)
         display_value = display_value.rjust(10, " ")
         self.lcd.putstr(display_value)
+
+    def modify_value(self, amount):
+        self.value = self.value + amount
+        self._render_value()
+
+    def focus_prev(self):
+        self.modify_value(1)
+
+    def focus_next(self):
+        self.modify_value(-1)
+
+
+class MenuDisplayValue:
+    def __init__(self, title, getter):
+        self.title = title
+        self.getter = getter
+
+        self.value = None
+        self.lcd = None
+        self.parent_menu = None
+
+        self.active = False
+
+    # Starts the menu, used at root level to start the interface.
+    # Or when navigating to a submenu or parten
+    def start(self, lcd):
+        self.lcd = lcd  # Assign the LCD to the menu.
+        self.columns = lcd.num_columns  # Get the columns of the LCD
+        self.lines = lcd.num_lines  # And the line
+        self.active = True  # Set the screen as active
+        self.value = self.getter()
+
+        # Chunk the list and calculate the viewport:
+        self.render()
+        return self
+
+    # Renders the menu, also when refreshing (when changing select)
+    def render(self):
+        # We only render the active screen, not the others
+        if not self.active:
+            return
+
+        self.lcd.clear()
+        self.lcd.move_to(0, 0)
+
+        self._render_context()
+        self._render_value()
+
+        process = multiprocessing.Process(
+            target=self._render_process, args=([self]))
+        process.start()
+
+    def choose(self):
+        return self.parent()
+
+    def parent(self):
+        if self.parent_menu:
+            self.active = False
+            return self.parent_menu.start(self.lcd)
+        logger.warn('No Parent window')
+        return self
+
+    def _render_context(self):
+        self.lcd.move_to(0, 0)
+        self.lcd.putstr(self.title)
+
+        self.lcd.move_to(0, 3)
+        self.lcd.putstr("<-Cancel")
+
+    def _render_value(self):
+        self.lcd.move_to(0, 2)
+        display_value = str(self.value)
+        display_value = display_value.rjust(10, " ")
+        self.lcd.putstr(display_value)
+
+    def _render_process(self):
+        while self.active:
+            self._render_value()
+            time.sleep(0.5)
 
     def modify_value(self, amount):
         self.value = self.value + amount
