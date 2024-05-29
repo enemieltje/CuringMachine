@@ -37,6 +37,6 @@ class Loadcell():
         logger.debug(data)
 
         if data != False and len(data) > 1:
-            return statistics.mean(data)
+            return int(statistics.mean(data))
 
         logger.warn('invalid data')

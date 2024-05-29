@@ -187,9 +187,9 @@ class HX711(object):
 
         # _is_ready = GPIO.input(self._dout) == 0
         _is_ready = self._dout.is_active == False
-        logger.debug("check data ready for reading: {result}".format(
-            result="YES" if _is_ready is True else "NO"
-        ))
+        # logger.debug("check data ready for reading: {result}".format(
+        #     result="YES" if _is_ready is True else "NO"
+        # ))
         return _is_ready
 
     def _set_channel_gain(self, num):
