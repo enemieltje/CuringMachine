@@ -1,3 +1,4 @@
+import statistics
 from lib.hx711 import HX711
 import logging
 import time
@@ -32,10 +33,10 @@ class Loadcell():
 
     def read():
         logger.debug('Read')
-        data = Loadcell.hx.get_raw_data(1)
+        data = Loadcell.hx.get_raw_data()
 
         if data != False:
-            return data
+            return statistics.mean(data)
         else:
             logger.warn('invalid data')
             return
