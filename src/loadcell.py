@@ -1,4 +1,5 @@
 import statistics
+from config import Config
 from lib.hx711 import HX711
 import logging
 import time
@@ -7,6 +8,10 @@ logger = logging.getLogger(__name__)
 
 
 class Loadcell():
+
+    def _parse(value):
+        config = Config.getLoadcell()
+        return (value - config[0]) * (config[3] - config[1]) / (config[2] - config[0]) + config[1]
 
     def start():
         logger.debug('Start')
@@ -37,6 +42,6 @@ class Loadcell():
         logger.debug(data)
 
         if data != False and len(data) > 1:
-            return int(statistics.mean(data))
+            return int(Loadcell._parse(statistics.mean(data)))
 
         logger.warn('invalid data')

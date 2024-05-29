@@ -54,6 +54,29 @@ class Config():
     def setBeltDirection(direction):
         Config.__config['Belt']['direction'] = str(direction)
 
+    def getLoadcell():
+        return [
+            Config.__getint('Loadcell', 'lowValue'),
+            Config.__getint('Loadcell', 'lowWeight'),
+            Config.__getint('Loadcell', 'highValue'),
+            Config.__getint('Loadcell', 'highWeight'),
+        ]
+
+    def setLoadcell(lowValue, lowWeight, highValue, highWeight):
+        if not lowValue:
+            lowValue = Config.__getint('Loadcell', 'lowValue')
+        if not lowWeight:
+            lowWeight = Config.__getint('Loadcell', 'lowWeight')
+        if not highValue:
+            highValue = Config.__getint('Loadcell', 'highValue')
+        if not highWeight:
+            highWeight = Config.__getint('Loadcell', 'highWeight')
+
+        Config.__config['Loadcell']['lowValue'] = lowValue
+        Config.__config['Loadcell']['lowWeight'] = lowWeight
+        Config.__config['Loadcell']['highValue'] = highValue
+        Config.__config['Loadcell']['highWeight'] = highWeight
+
     def getWebPort() -> int:
         logger.debug('getting web port')
         return Config.__getint('WebConfig', 'port')
@@ -61,11 +84,15 @@ class Config():
     def __createDefault():
         logger.debug('loading default')
         Config.__default = configparser.ConfigParser()
-        Config.__default['Metadata'] = {'version': '1'}
+        Config.__default['Metadata'] = {'version': '2'}
         Config.__default['WebConfig'] = {'port': '8080',
                                          'address': ''}
         Config.__default['Belt'] = {'speed': '200',
                                     'direction': 'forward'}
+        Config.__default['Loadcell'] = {'lowValue': '0',
+                                        'lowWeight': '0',
+                                        'highValue': '200000',
+                                        'highWeight': '1000'}
         logger.debug(Config.__default)
 
     def __loadDefault():
