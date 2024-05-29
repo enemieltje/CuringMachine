@@ -4,7 +4,6 @@ import sys
 from belt import Belt
 from camera import Camera
 from config import Config
-from server import Server
 
 logger = logging.getLogger(__name__)
 
