@@ -258,7 +258,7 @@ class MenuDisplayValue:
 
     def parent(self):
         self.parent_conn.send(False)
-        time.sleep(0.5)
+        self.process.join()
         self.process.close()
         # self.process.terminate()
         if self.parent_menu:
