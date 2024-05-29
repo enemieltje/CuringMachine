@@ -221,6 +221,7 @@ class MenuDisplayValue:
         self.parent_menu = None
 
         self.active = False
+        self.parent_conn, self.child_conn = multiprocessing.Pipe()
         self.process = multiprocessing.Process(
             target=self._render_process)
 
@@ -249,13 +250,15 @@ class MenuDisplayValue:
         self._render_context()
         self._render_value()
 
+        self.parent_conn.send(True)
         self.process.start()
 
     def choose(self):
         return self.parent()
 
     def parent(self):
-        self.process.terminate()
+        self.parent_conn.send(False)
+        # self.process.terminate()
         if self.parent_menu:
             logger.debug('Switching to parent window')
             self.active = False
@@ -278,12 +281,14 @@ class MenuDisplayValue:
 
     def _render_process(self):
         logger.debug(self.active)
-        while self.active:
+        recv = self.child_conn.recv()
+        while recv:
             logger.debug('render process loop')
             self.value = self.getter()
             self._render_value()
             time.sleep(0.5)
-            logger.debug('active: ' + str(self.active))
+            recv = self.child_conn.recv()
+            logger.debug('recv: ' + str(recv))
         logger.debug('process no longer active')
 
     def modify_value(self, amount):
