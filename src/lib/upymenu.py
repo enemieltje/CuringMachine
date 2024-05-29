@@ -256,6 +256,7 @@ class MenuDisplayValue:
 
     def parent(self):
         if self.parent_menu:
+            logger.debug('Switching to parent window')
             self.active = False
             return self.parent_menu.start(self.lcd)
         self.process.terminate()
@@ -282,6 +283,7 @@ class MenuDisplayValue:
             self.value = self.getter()
             self._render_value()
             time.sleep(0.5)
+            logger.debug('active: ' + self.active)
         logger.debug('process no longer active')
 
     def modify_value(self, amount):
