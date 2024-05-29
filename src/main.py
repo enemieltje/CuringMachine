@@ -34,16 +34,12 @@ def sigterm_handler(_signo, _stack_frame):
 
 if __name__ == "__main__":
     # Register our shutdown handler to be called at signal "terminate"
-    signal.signal(signal.SIGTERM, sigterm_handler)
+    signal.signal(signal.SIGTERM, CuringMachine.stop)
 
     # Start the server and add the camera(s)
     logger.info("starting")
     try:
-        Config.start()
         CuringMachine.start()
-        Loadcell.start()
-        Input.start()
-        LcdMenu.start()
-        Server.start()
     finally:
-        sigterm_handler(signal.SIGTERM, 0)
+        CuringMachine.stop()
+        # sigterm_handler(signal.SIGTERM, 0)
