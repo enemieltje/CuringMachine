@@ -91,7 +91,7 @@ class Config():
                                     'direction': 'forward'}
         Config.__default['Loadcell'] = {'lowValue': '20000',
                                         'lowWeight': '0',
-                                        'highValue': '990000',
+                                        'highValue': '-990000',
                                         'highWeight': '1004'}
         logger.debug(Config.__default)
 
