@@ -248,7 +248,7 @@ class MenuDisplayValue:
         self._render_value()
 
         process = multiprocessing.Process(
-            target=self._render_process, args=([self]))
+            target=self._render_process)
         process.start()
 
     def choose(self):
