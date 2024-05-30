@@ -63,13 +63,13 @@ class Config():
     #     ]
 
     def getLoadcell(type):
-        if type not in ['lowValue', 'lowWeight', 'highValue', 'highWeigt']:
+        if type not in ['lowValue', 'lowWeight', 'highValue', 'highWeight']:
             logger.error('Tried to get wrong loadcell type: %s', type)
             return
         return Config.__getint('Loadcell', type)
 
     def setLoadcell(type, value):
-        if type not in ['lowValue', 'lowWeight', 'highValue', 'highWeigt']:
+        if type not in ['lowValue', 'lowWeight', 'highValue', 'highWeight']:
             logger.error('Tried to set wrong loadcell type: %s', type)
             return
         Config.__config['Loadcell'][type] = value
