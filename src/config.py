@@ -52,20 +52,14 @@ class Config():
 
     def setBeltSpeed(speed):
         Config.__config['Belt']['speed'] = str(speed)
+        Config.save()
 
     def getBeltDirection() -> int:
         return Config.__config['Belt'].get('direction', 'forward')
 
     def setBeltDirection(direction):
         Config.__config['Belt']['direction'] = str(direction)
-
-    # def getLoadcell():
-    #     return [
-    #         Config.__getint('Loadcell', 'lowValue'),
-    #         Config.__getint('Loadcell', 'lowWeight'),
-    #         Config.__getint('Loadcell', 'highValue'),
-    #         Config.__getint('Loadcell', 'highWeight'),
-    #     ]
+        Config.save()
 
     def getLoadcell(type):
         if type not in ['lowValue', 'lowWeight', 'highValue', 'highWeight']:
@@ -78,6 +72,7 @@ class Config():
             logger.error('Tried to set wrong loadcell type: %s', type)
             return
         Config.__config['Loadcell'][type] = value
+        Config.save()
 
     def getWebPort() -> int:
         logger.debug('getting web port')
