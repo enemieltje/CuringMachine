@@ -25,8 +25,10 @@ class Config():
         if os.path.exists(path):
             logger.info('opening config ' + name)
             Config.__config.read(path)
-            if not (Config.__getint('Metadata', 'Version') == Config.version):
-                logger.warn("Config %s is outdated!", name)
+            version = Config.__config['Metadata']['Version']
+            if not (version == Config.version):
+                logger.warn(
+                    "Config %s is outdated! Version is %s instead of required %s", name, version, Config.version)
                 Config.__loadDefault()
         else:
             logger.info('no config exists, opening default')
