@@ -299,18 +299,22 @@ class HX711(object):
         # check if data is valid
         # 0x800000 is the lowest
         # 0x7fffff is the highest possible value from HX711
-        if data_in == 0x7fffff or data_in == 0x800000:
-            logger.debug('Invalid data detected: ' + str(data_in))
-            return False
+        # if data_in == 0x7fffff or data_in == 0x800000:
+        #     logger.debug('Invalid data detected: ' + str(data_in))
+        #     return False
 
-        # calculate int from 2's complement
-        signed_data = 0
-        # 0b1000 0000 0000 0000 0000 0000 check if the sign bit is 1. Negative number.
-        if (data_in & 0x800000):
-            # convert from 2's complement to int
-            signed_data = -((data_in ^ 0xffffff) + 1)
-        else:  # else do not do anything the value is positive number
-            signed_data = data_in
+        # # calculate int from 2's complement
+        # signed_data = 0
+        # # 0b1000 0000 0000 0000 0000 0000 check if the sign bit is 1. Negative number.
+        # if (data_in & 0x800000):
+        #     # convert from 2's complement to int
+        #     signed_data = -((data_in ^ 0xffffff) + 1)
+        # else:  # else do not do anything the value is positive number
+        #     signed_data = data_in
+
+        self._pd_sck.on()
+        signed_data = data_in ^ 0x800000
+        self._pd_sck.off()
 
         logger.debug('Converted 2\'s complement value: ' + str(signed_data))
 
