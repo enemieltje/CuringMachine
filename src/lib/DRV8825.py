@@ -63,6 +63,7 @@ class DRV8825():
     def Stop(self):
         self.keepTurning = False
         self.parent_conn.send(False)
+        self.process.kill()
         self.digital_write(self.enable_pin, 0)
 
     def Configure_mode(self, microstep):
@@ -128,8 +129,8 @@ class DRV8825():
         self.keepTurning = True
         count1 = time.perf_counter()
 
-        recv = self.child_conn.recv()
-        while recv:
+        # recv = self.child_conn.recv()
+        while True:
             self.digital_write(self.step_pin, True)
             count2 = time.perf_counter()
             steptime = float(count2 - count1)
@@ -150,5 +151,5 @@ class DRV8825():
             else:
                 logger.warn('step took too long')
 
-            if self.child_conn.poll():
-                recv = self.child_conn.recv()
+            # if self.child_conn.poll():
+            #     recv = self.child_conn.recv()
