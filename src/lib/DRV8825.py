@@ -127,6 +127,7 @@ class DRV8825():
             time.sleep(stepdelay - steptime)
 
             self.digital_write(self.step_pin, False)
+            logger.debug("step delay: " + str(steptime))
             count1 = time.perf_counter()
             steptime = float(count1 - count2)
             time.sleep(stepdelay - steptime)
