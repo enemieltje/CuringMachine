@@ -27,7 +27,6 @@ class Config():
             if not (Config.__getint('Metadata', 'Version') == '0'):
                 logger.warn("Config %s is outdated!", name)
                 Config.__loadDefault()
-                Config.currentConfig = ''
         else:
             logger.info('no config exists, opening default')
             Config.__loadDefault()
@@ -41,8 +40,10 @@ class Config():
 
         path = Config.configFolder + Config.currentConfig
         if os.path.exists(path):
+            logger.debug('removing old config')
             os.remove(path)
 
+        logger.debug('writing new config')
         with open(path, 'w') as configfile:
             Config.__config.write(configfile)
 
@@ -98,6 +99,7 @@ class Config():
 
     def __loadDefault():
         Config.__config = Config.__default
+        Config.currentConfig = 'default.ini'
 
     def __getint(section, name) -> int:
         logger.debug("getting value %s from config %s",
