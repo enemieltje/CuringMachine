@@ -15,8 +15,8 @@ class Belt:
         # create each of the motors and set their microstep config
         Belt.motors.append(DRV8825(dir_pin=13, step_pin=19,
                                    enable_pin=12, mode_pins=(16, 17, 20)))
-        Belt.motors.append(DRV8825(dir_pin=24, step_pin=18,
-                                   enable_pin=4, mode_pins=(21, 22, 27)))
+        # Belt.motors.append(DRV8825(dir_pin=24, step_pin=18,
+        #                            enable_pin=4, mode_pins=(21, 22, 27)))
         for motor in Belt.motors:
             motor.SetMicroStep('hardward', '1/4step')
 
@@ -33,18 +33,10 @@ class Belt:
         # process1.start()
         # process2.start()
         # Belt.startMotor()
-        for i in range(len(Belt.motors)):
-            Belt.startMotor(i)
-
-    def startMotor(index=0):
-        # start turning a single motor
-        speed = Config.getBeltSpeed()
-        # direction = Config.getBeltDirection()
-        direction = 'forward'
-        logger.debug("starting motor with speed %i", speed)
-        motor = Belt.motors[index]
-        motor.TurnStep(Dir=direction, steps=0, stepdelay=1/speed)
-        # motor.Stop()
+        for motor in Belt.motors:
+            speed = Config.getBeltSpeed()
+            direction = Config.getBeltDirection()
+            motor.TurnStep(Dir=direction, steps=0, stepdelay=1/speed)
 
     def stop():
         # stop each of the motors

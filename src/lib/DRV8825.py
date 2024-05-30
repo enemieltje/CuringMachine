@@ -95,6 +95,7 @@ class DRV8825():
             self.Configure_mode(microstep[stepformat])
 
     def TurnStep(self, Dir, steps=0, stepdelay=0.005):
+        logger.debug("starting motor with stepdelay %i", stepdelay)
         if (Dir == MotorDir[0]):
             logger.debug("forward")
             self.digital_write(self.enable_pin, 1)
