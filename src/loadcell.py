@@ -54,14 +54,14 @@ class Loadcell():
 
     def configLow():
         lowValue = Loadcell.readRaw()
-        Config.setLoadcell('lowValue', lowValue)
+        Config.setLoadcell('lowValue', str(lowValue))
 
     def configHigh():
         highValue = Loadcell.readRaw()
-        Config.setLoadcell('highValue', highValue)
+        Config.setLoadcell('highValue', str(highValue))
 
     def getHighWeight():
         return Config.getLoadcell('highWeight')
 
     def setHighWeight(highWeight):
-        Config.setLoadcell('highWeight', highWeight)
+        Config.setLoadcell('highWeight', str(highWeight))
