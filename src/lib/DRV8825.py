@@ -94,7 +94,7 @@ class DRV8825():
             # self.digital_write(self.mode_pins, microstep[stepformat])
             self.Configure_mode(microstep[stepformat])
 
-    def TurnStep(self, Dir, steps, stepdelay=0.005):
+    def TurnStep(self, Dir, steps=0, stepdelay=0.005):
         if (Dir == MotorDir[0]):
             logger.debug("forward")
             self.digital_write(self.enable_pin, 1)
@@ -115,7 +115,7 @@ class DRV8825():
             self.process.start()
             # self.__TurnIndefinite(stepdelay)
 
-        logger.debug("turn step:", steps)
+        logger.debug("turn step:" + steps)
         for i in range(steps):
             self.digital_write(self.step_pin, True)
             time.sleep(stepdelay)

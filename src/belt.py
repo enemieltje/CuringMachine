@@ -32,7 +32,9 @@ class Belt:
         #     target=Belt.startMotor, args=([1]))
         # process1.start()
         # process2.start()
-        Belt.startMotor()
+        # Belt.startMotor()
+        for i in range(len(Belt.motors)):
+            Belt.startMotor(i)
 
     def startMotor(index=0):
         # start turning a single motor
