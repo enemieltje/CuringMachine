@@ -49,7 +49,7 @@ class Config():
         Config.__config['Belt']['speed'] = str(speed)
 
     def getBeltDirection() -> int:
-        return Config.__getint('Belt', 'direction')
+        return Config.__config['Belt'].get('direction', 'forward')
 
     def setBeltDirection(direction):
         Config.__config['Belt']['direction'] = str(direction)
