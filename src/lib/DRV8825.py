@@ -124,13 +124,19 @@ class DRV8825():
             self.digital_write(self.step_pin, True)
             count2 = time.perf_counter()
             steptime = float(count2 - count1)
-            logger.debug("step delay: " + str(steptime))
-            logger.debug("wait time: " + str(stepdelay - steptime))
-            time.sleep(stepdelay - steptime)
+            # logger.debug("step time: " + str(steptime))
+            # logger.debug("wait time: " + str(stepdelay - steptime))
+            if stepdelay > steptime:
+                time.sleep(stepdelay - steptime)
+            else:
+                logger.warn('step took too long')
 
             self.digital_write(self.step_pin, False)
             count1 = time.perf_counter()
             steptime = float(count1 - count2)
-            logger.debug("step delay: " + str(steptime))
-            logger.debug("wait time: " + str(stepdelay - steptime))
-            time.sleep(stepdelay - steptime)
+            # logger.debug("step time: " + str(steptime))
+            # logger.debug("wait time: " + str(stepdelay - steptime))
+            if stepdelay > steptime:
+                time.sleep(stepdelay - steptime)
+            else:
+                logger.warn('step took too long')
