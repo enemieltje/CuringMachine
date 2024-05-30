@@ -26,12 +26,13 @@ class Belt:
         logger.debug("starting belt")
 
         # start a separate process for each of the motors so that we don't freeze the program
-        process1 = multiprocessing.Process(
-            target=Belt.startMotor, args=([0]))
-        process2 = multiprocessing.Process(
-            target=Belt.startMotor, args=([1]))
-        process1.start()
+        # process1 = multiprocessing.Process(
+        #     target=Belt.startMotor, args=([0]))
+        # process2 = multiprocessing.Process(
+        #     target=Belt.startMotor, args=([1]))
+        # process1.start()
         # process2.start()
+        Belt.startMotor()
 
     def startMotor(index=0):
         # start turning a single motor

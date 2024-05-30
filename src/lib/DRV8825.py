@@ -1,3 +1,4 @@
+import multiprocessing
 import gpiozero as GPIO
 import time
 import logging
@@ -47,7 +48,9 @@ class DRV8825():
             mode_pins[2]: self.mode_3
         }
 
+        self.process = None
         self.keepTurning = False
+        self.parent_conn, self.child_conn = multiprocessing.Pipe()
 
     def digital_write(self, pin, value):
         if value:
@@ -59,6 +62,7 @@ class DRV8825():
 
     def Stop(self):
         self.keepTurning = False
+        self.parent_conn.send(False)
         self.digital_write(self.enable_pin, 0)
 
     def Configure_mode(self, microstep):
@@ -104,7 +108,11 @@ class DRV8825():
             return
 
         if (steps == 0):
-            self.__TurnIndefinite(stepdelay)
+            self.process = multiprocessing.Process(
+                target=self.__TurnIndefinite, args=([stepdelay]))
+            self.parent_conn.send(True)
+            self.process.start()
+            # self.__TurnIndefinite(stepdelay)
 
         logger.debug("turn step:", steps)
         for i in range(steps):
@@ -120,11 +128,12 @@ class DRV8825():
         self.keepTurning = True
         count1 = time.perf_counter()
 
-        while self.keepTurning:
+        recv = self.child_conn.recv()
+        while recv:
             self.digital_write(self.step_pin, True)
             count2 = time.perf_counter()
             steptime = float(count2 - count1)
-            # logger.debug("step time: " + str(steptime))
+            logger.debug("step time1: " + str(steptime))
             # logger.debug("wait time: " + str(stepdelay - steptime))
             if stepdelay > steptime:
                 time.sleep(stepdelay - steptime)
@@ -134,9 +143,12 @@ class DRV8825():
             self.digital_write(self.step_pin, False)
             count1 = time.perf_counter()
             steptime = float(count1 - count2)
-            # logger.debug("step time: " + str(steptime))
+            logger.debug("step time2: " + str(steptime))
             # logger.debug("wait time: " + str(stepdelay - steptime))
             if stepdelay > steptime:
                 time.sleep(stepdelay - steptime)
             else:
                 logger.warn('step took too long')
+
+            if self.child_conn.poll():
+                recv = self.child_conn.recv()
