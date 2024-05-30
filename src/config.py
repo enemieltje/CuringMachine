@@ -89,10 +89,10 @@ class Config():
                                          'address': ''}
         Config.__default['Belt'] = {'speed': '200',
                                     'direction': 'forward'}
-        Config.__default['Loadcell'] = {'lowValue': '24700',
+        Config.__default['Loadcell'] = {'lowValue': '0',
                                         'lowWeight': '0',
-                                        'highValue': '-990000',
-                                        'highWeight': '1004'}
+                                        'highValue': '1000',
+                                        'highWeight': '1000'}
         logger.debug(Config.__default)
 
     def __loadDefault():

@@ -284,8 +284,8 @@ class HX711(object):
             # Left shift by one bit then bitwise OR with the new bit.
             bit = self._dout.is_active
             data_in = (data_in << 1) | bit
-            logger.debug(str(bin(data_in)))
-            time.sleep(0.0001)
+            # logger.debug(str(bin(data_in)))
+            # time.sleep(0.0001)
 
         if self.channel == 'A' and self.channel_a_gain == 128:
             self._set_channel_gain(num=1)  # send one bit
