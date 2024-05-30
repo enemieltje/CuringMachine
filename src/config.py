@@ -54,28 +54,25 @@ class Config():
     def setBeltDirection(direction):
         Config.__config['Belt']['direction'] = str(direction)
 
-    def getLoadcell():
-        return [
-            Config.__getint('Loadcell', 'lowValue'),
-            Config.__getint('Loadcell', 'lowWeight'),
-            Config.__getint('Loadcell', 'highValue'),
-            Config.__getint('Loadcell', 'highWeight'),
-        ]
+    # def getLoadcell():
+    #     return [
+    #         Config.__getint('Loadcell', 'lowValue'),
+    #         Config.__getint('Loadcell', 'lowWeight'),
+    #         Config.__getint('Loadcell', 'highValue'),
+    #         Config.__getint('Loadcell', 'highWeight'),
+    #     ]
 
-    def setLoadcell(lowValue, lowWeight, highValue, highWeight):
-        if not lowValue:
-            lowValue = Config.__getint('Loadcell', 'lowValue')
-        if not lowWeight:
-            lowWeight = Config.__getint('Loadcell', 'lowWeight')
-        if not highValue:
-            highValue = Config.__getint('Loadcell', 'highValue')
-        if not highWeight:
-            highWeight = Config.__getint('Loadcell', 'highWeight')
+    def getLoadcell(type):
+        if type not in ['lowValue', 'lowWeight', 'highValue', 'highWeigt']:
+            logger.error('Tried to get wrong loadcell type: %s', type)
+            return
+        return Config.__getint('Loadcell', type)
 
-        Config.__config['Loadcell']['lowValue'] = lowValue
-        Config.__config['Loadcell']['lowWeight'] = lowWeight
-        Config.__config['Loadcell']['highValue'] = highValue
-        Config.__config['Loadcell']['highWeight'] = highWeight
+    def setLoadcell(type, value):
+        if type not in ['lowValue', 'lowWeight', 'highValue', 'highWeigt']:
+            logger.error('Tried to set wrong loadcell type: %s', type)
+            return
+        Config.__config['Loadcell'][type] = value
 
     def getWebPort() -> int:
         logger.debug('getting web port')

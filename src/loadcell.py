@@ -10,8 +10,11 @@ logger = logging.getLogger(__name__)
 class Loadcell():
 
     def _parse(value):
-        config = Config.getLoadcell()
-        return (value - config[0]) * (config[3] - config[1]) / (config[2] - config[0]) + config[1]
+        lowValue = Config.getLoadcell('lowValue')
+        lowWeight = Config.getLoadcell('lowWeight')
+        highValue = Config.getLoadcell('highValue')
+        highWeight = Config.getLoadcell('highWeight')
+        return (value - lowValue) * (highWeight - lowWeight) / (highValue - lowValue) + lowWeight
 
     def start():
         logger.debug('Start')
@@ -36,12 +39,29 @@ class Loadcell():
         else:
             logger.warn('invalid data')
 
-    def read():
+    def readRaw():
         logger.debug('Read')
         data = Loadcell.hx.get_raw_data()
         logger.debug(data)
 
         if data != False and len(data) > 1:
-            return int(Loadcell._parse(statistics.mean(data)))
+            return int(statistics.mean(data))
 
         logger.warn('invalid data')
+
+    def readParsed():
+        return int(Loadcell._parse(Loadcell.readRaw()))
+
+    def configLow():
+        lowValue = Loadcell.readRaw()
+        Config.setLoadcell('lowValue', lowValue)
+
+    def configHigh():
+        highValue = Loadcell.readRaw()
+        Config.setLoadcell('highValue', highValue)
+
+    def getHighWeight():
+        return Config.getLoadcell('highWeight')
+
+    def setHighWeight(highWeight):
+        Config.setLoadcell('highWeight', highWeight)

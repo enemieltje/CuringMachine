@@ -51,12 +51,15 @@ class LcdMenu():
         camMenu.add_option(stopCam)
 
         loadMenu = Menu('Loadcell')
-        print = MenuAction("print values", Loadcell.print)
-        reset = MenuAction('reset loadcell', Loadcell.reset)
-        show = MenuDisplayValue('read loadcell', Loadcell.read)
-        loadMenu.add_option(print)
-        loadMenu.add_option(reset)
+        show = MenuDisplayValue('read loadcell', Loadcell.readParsed)
+        calLow = MenuAction('Calibrate Low', Loadcell.configLow)
+        calHigh = MenuAction('Calibrate High', Loadcell.configHigh)
+        calWeight = MenuValue('Configure High Weight',
+                              Loadcell.getHighWeight, Loadcell.setHighWeight)
         loadMenu.add_option(show)
+        loadMenu.add_option(calLow)
+        loadMenu.add_option(calHigh)
+        loadMenu.add_option(calWeight)
 
         mainMenu = Menu('Main Menu')
 
