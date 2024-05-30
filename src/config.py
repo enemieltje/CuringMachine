@@ -84,7 +84,7 @@ class Config():
         Config.__default['Metadata'] = {'version': '2'}
         Config.__default['WebConfig'] = {'port': '8080',
                                          'address': ''}
-        Config.__default['Belt'] = {'speed': '2000',
+        Config.__default['Belt'] = {'speed': '1000',
                                     'direction': 'forward'}
         Config.__default['Loadcell'] = {'lowValue': '8000000',
                                         'lowWeight': '0',
