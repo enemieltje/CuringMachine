@@ -8,6 +8,7 @@ logger = logging.getLogger(__name__)
 class Config():
     configFolder = "config/"
     currentConfig = ""
+    version = '2'
     __config = configparser.ConfigParser()
     __default = configparser.ConfigParser()
 
@@ -24,7 +25,7 @@ class Config():
         if os.path.exists(path):
             logger.info('opening config ' + name)
             Config.__config.read(path)
-            if not (Config.__getint('Metadata', 'Version') == '0'):
+            if not (Config.__getint('Metadata', 'Version') == Config.version):
                 logger.warn("Config %s is outdated!", name)
                 Config.__loadDefault()
         else:
@@ -81,7 +82,7 @@ class Config():
     def __createDefault():
         logger.debug('loading default')
         Config.__default = configparser.ConfigParser()
-        Config.__default['Metadata'] = {'version': '2'}
+        Config.__default['Metadata'] = {'version': Config.version}
         Config.__default['WebConfig'] = {'port': '8080',
                                          'address': ''}
         Config.__default['Belt'] = {'speed': '200',
