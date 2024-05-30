@@ -89,7 +89,7 @@ class Config():
                                          'address': ''}
         Config.__default['Belt'] = {'speed': '200',
                                     'direction': 'forward'}
-        Config.__default['Loadcell'] = {'lowValue': '20000',
+        Config.__default['Loadcell'] = {'lowValue': '24700',
                                         'lowWeight': '0',
                                         'highValue': '-990000',
                                         'highWeight': '1004'}

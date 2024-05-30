@@ -255,12 +255,13 @@ class HX711(object):
             # check loop count
             # and stop when defined maximum is reached
             if ready_counter >= max_tries:
-                logger.warn('self._read() not ready after 40 trials\n')
+                logger.warn('self._read() not ready after 40 trials')
                 return False
 
         data_in = 0  # 2's complement data from hx 711
         # read first 24 bits of data
         for i in range(24):
+            logger.debug('reading bit:')
             # start timer
             start_counter = time.perf_counter()
             # request next bit from HX711
@@ -281,7 +282,9 @@ class HX711(object):
 
             # Shift the bits in to data_in variable.
             # Left shift by one bit then bitwise OR with the new bit.
-            data_in = (data_in << 1) | self._dout.is_active
+            bit = self._dout.is_active
+            data_in = (data_in << 1) | bit
+            logger.debug(str(bit) + " " + str(bin(data_in)))
 
         if self.channel == 'A' and self.channel_a_gain == 128:
             self._set_channel_gain(num=1)  # send one bit
