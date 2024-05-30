@@ -39,7 +39,11 @@ class Config():
             return
         logger.info("Saving config: " + Config.currentConfig)
 
-        with open(Config.configFolder + Config.currentConfig, 'w') as configfile:
+        path = Config.configFolder + Config.currentConfig
+        if os.path.exists(path):
+            os.remove(path)
+
+        with open(path, 'w') as configfile:
             Config.__config.write(configfile)
 
     def getBeltSpeed() -> int:
