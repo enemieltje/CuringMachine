@@ -261,7 +261,7 @@ class HX711(object):
         data_in = 0  # 2's complement data from hx 711
         # read first 24 bits of data
         for i in range(24):
-            logger.debug('reading bit {i}:'.format(i))
+            logger.debug('reading bit {s}:'.format(i))
             # start timer
             start_counter = time.perf_counter()
             # request next bit from HX711
