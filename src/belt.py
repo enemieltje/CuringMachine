@@ -31,7 +31,7 @@ class Belt:
         process2 = multiprocessing.Process(
             target=Belt.startMotor, args=([1]))
         process1.start()
-        process2.start()
+        # process2.start()
 
     def startMotor(index=0):
         # start turning a single motor
