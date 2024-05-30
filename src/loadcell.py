@@ -50,7 +50,7 @@ class Loadcell():
         logger.warn('invalid data')
 
     def readParsed():
-        return int(Loadcell._parse(Loadcell.readRaw()))
+        return round(Loadcell._parse(Loadcell.readRaw()), 3)
 
     def configLow():
         lowValue = Loadcell.readRaw()
