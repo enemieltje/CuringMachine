@@ -63,8 +63,9 @@ class DRV8825():
     def Stop(self):
         self.keepTurning = False
         self.parent_conn.send(False)
-        self.process.kill()
         self.digital_write(self.enable_pin, 0)
+        if type(self.process) == multiprocessing.Process:
+            self.process.kill()
 
     def Configure_mode(self, microstep):
         j = 0
