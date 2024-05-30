@@ -118,9 +118,15 @@ class DRV8825():
             logger.warn("Motor is already running")
             return
         self.keepTurning = True
+        count1 = time.perf_counter()
 
         while self.keepTurning:
             self.digital_write(self.step_pin, True)
-            time.sleep(stepdelay)
+            count2 = time.perf_counter()
+            steptime = float(count2 - count1)
+            time.sleep(stepdelay - steptime)
+
             self.digital_write(self.step_pin, False)
-            time.sleep(stepdelay)
+            count1 = time.perf_counter()
+            steptime = float(count1 - count2)
+            time.sleep(stepdelay - steptime)
