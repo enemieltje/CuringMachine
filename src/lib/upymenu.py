@@ -123,6 +123,8 @@ class Menu:
         if self.parent_menu:
             self.active = False
             return self.parent_menu.start(self.lcd)
+        logger.warn('No Parent window')
+        return self
 
     def _choose_menu(self, submenu):
         self.active = False
