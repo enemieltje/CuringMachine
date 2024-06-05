@@ -25,7 +25,9 @@ class Config():
         if os.path.exists(path):
             logger.info('opening config ' + name)
             Config.__config.read(path)
-            version = Config.__config['Metadata']['Version']
+            version = ''
+            if Config.__config.has_option('Metadata'):
+                version = Config.__config['Metadata']['Version']
             if not (version == Config.version):
                 logger.warn(
                     "Config %s is outdated! Version is %s instead of required %s", name, version, Config.version)
