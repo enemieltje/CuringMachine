@@ -26,7 +26,7 @@ class Config():
             logger.info('opening config ' + name)
             Config.__config.read(path)
             version = ''
-            if Config.__config.has_option('Metadata'):
+            if Config.__config.has_section('Metadata'):
                 version = Config.__config['Metadata']['Version']
             if not (version == Config.version):
                 logger.warn(
