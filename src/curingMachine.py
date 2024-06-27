@@ -1,8 +1,9 @@
+from config import Config
 import logging
 import multiprocessing
 import sys
 from belt import Belt
-from camera import Camera
+# from camera import Camera
 from config import Config
 
 logger = logging.getLogger(__name__)
@@ -25,39 +26,40 @@ class CuringMachine():
     def startCam():
         # TODO: Allow starting/stopping a single camera?
         logger.debug("start cam")
-        for camera in CuringMachine.cameras:
-            camera.startStream()
+        # for camera in CuringMachine.cameras:
+        #     camera.startStream()
 
     def stopCam():
         logger.debug("stop cam")
-        for camera in CuringMachine.cameras:
-            camera.stopStream()
+        # for camera in CuringMachine.cameras:
+        #     camera.stopStream()
 
     def picture(index=0):
         # Take a picture and send the imagestream directly to the webpage
         # TODO: Do this in a separate process
         # TODO: Check if the file exists already to avoid overwriting old pictures
         logger.debug("picture")
-        return CuringMachine.cameras[index].picture()
+        # return CuringMachine.cameras[index].picture()
 
-    def addCamera(camera: Camera):
-        logger.debug('adding camera')
-        CuringMachine.cameras.append(camera)
+    # def addCamera(camera: Camera):
+    #     logger.debug('adding camera')
+        # CuringMachine.cameras.append(camera)
 
     def start():
         # add all the cameras and start the web server
         logger.debug('starting curing machine')
-        CuringMachine.addCamera(Camera())
+        # CuringMachine.addCamera(Camera())
 
     def stop():
-        # Gracefully stop the server when the program exits or crashes
-        # This makes sure to stop the cameras and unpower the steppers
+
+      # Gracefully stop the server when the program exits or crashes
+      # This makes sure to stop the cameras and unpower the steppers
         logger.info("stopping...")
         # LcdMenu.stop()
 
-        for camera in CuringMachine.cameras:
-            camera.stopStream()
+    #    for camera in CuringMachine.cameras:
+    #         camera.stopStream()
         Belt.stop()
         Config.save()
 
-        # LcdMenu.turnOff()
+    # LcdMenu.turnOff()
